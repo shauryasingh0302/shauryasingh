@@ -1,48 +1,31 @@
-# Devstarter - by Zippystarter
+# Shaurya Singh — Portfolio
 
-Devstarter is one-page developer portfolio template
-from [Zippystarter](https://zippystarter.com). It's built
-with [Next.js](https://nextjs.org) and [shadcn](https://ui.shadcn.com).
+Personal portfolio built with [Next.js](https://nextjs.org) and [shadcn](https://ui.shadcn.com).
 
-This [shadcn template](https://zippystarter.com/templates/devstarter) is fully
-compatible with shadcn's theming system.
+## Stack
 
-To experiment with [shadcn themes](https://zippystarter.com/themes), head on
-over to
-the [shadcn theme generator](https://zippystarter.com/tools/shadcn-ui-theme-generator/demo/dev-one?utm_source=https://github.com/zippystarter/template-devone)
-where you'll be able to apply themes to the template and export them for your
-own use.
-
-![devstarter](public/og.jpg)
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4 + tw-animate-css
+- **UI:** shadcn/ui (Radix primitives, class-variance-authority)
+- **Icons:** Lucide React
+- **Fonts:** Space Grotesk (body), JetBrains Mono (code/monospace)
+- **Theming:** next-themes (dark/light/system)
 
 ## Getting Started
 
-First, run the development server:
-
-Install the dependencies. I recommend using `pnpm`. If you want to use `npm`, just replace pnpm with `npm`.
-
 ```bash
-pnpm install
+npm install
+npm run dev
 ```
 
-Then, start the development server:
+Opens at [http://localhost:3002](http://localhost:3002).
 
-```bash
-pnpm dev
-```
+## Scripts
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Notes
-
-This template makes use of modern CSS features such as CSS Grid & Subgrid &
-mix-blend-mode.
-
-## Learn More
-
-For a deeper understanding of the technologies used in this template, check out the resources listed below:
-
-- [Zippystarter](https://zippystarter.com) - Learn about Zippystarter's features and products
-- [shadcn](https://ui.shadcn.com) - The front-runner in headless UI implementation
-- [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework
-- [Next.js](https://nextjs.org/docs) - learn about Next.js features and API.
+| Command           | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Start dev server (3002)  |
+| `npm run build`   | Production build         |
+| `npm run lint`    | Run ESLint               |
+| `npm run format`  | Format with Prettier     |
