@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
-// @ts-ignore: allow side-effect CSS import when type declarations are missing
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
