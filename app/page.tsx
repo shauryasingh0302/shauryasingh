@@ -284,24 +284,30 @@ export default function Home() {
           Shaurya<span className="text-primary">_</span>Singh
         </div>
         <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground ">
-          <Link
-            href="#projects"
+          <button
+            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
             className="hover:text-primary transition-colors"
           >
             Projects
-          </Link>
-          <Link href="#skills" className="hover:text-primary transition-colors">
+          </button>
+          <button
+            onClick={() => document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" })}
+            className="hover:text-primary transition-colors"
+          >
             Skills
-          </Link>
-          <Link href="#blog" className="hover:text-primary transition-colors">
+          </button>
+          <button
+            onClick={() => document.getElementById("blog")?.scrollIntoView({ behavior: "smooth" })}
+            className="hover:text-primary transition-colors"
+          >
             Logs
-          </Link>
-          <Link
-            href="#contact"
+          </button>
+          <button
+            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
             className="hover:text-primary transition-colors"
           >
             Contact
-          </Link>
+          </button>
         </nav>
         <div className="flex items-center gap-1 md:gap-3">
           <button
