@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -23,7 +24,11 @@ import {
   Database,
   Cpu,
   ArrowRight,
+  Sun,
+  Moon,
+  Search,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Container } from "@/components/zippystarter/container";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -47,6 +52,14 @@ export default function Home() {
   const [terminalValue, setTerminalValue] = useState("");
   const [terminalHistory, setTerminalHistory] = useState<{ command: string; response: string }[]>([]);
   const terminalInputRef = useRef<HTMLInputElement>(null);
+  const [toast, setToast] = useState<{ visible: boolean; message: string }>({
+    visible: false,
+    message: "",
+  });
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const handleTerminalKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
@@ -98,18 +111,36 @@ export default function Home() {
     },
   ];
 
-  const skills = [
+  const skills: { category: string; items: { name: string; icon: string; invertDark?: boolean; customSvg?: boolean }[] }[] = [
     {
       category: "Frontend",
-      items: ["React.js", "Next.js", "TypeScript", "Tailwind CSS", "HTML/CSS"],
+      items: [
+        { name: "React.js",     icon: "react" },
+        { name: "Next.js",      icon: "nextdotjs",   invertDark: true },
+        { name: "TypeScript",   icon: "typescript" },
+        { name: "Tailwind CSS", icon: "tailwindcss" },
+        { name: "HTML/CSS",     icon: "html5" },
+      ],
     },
     {
       category: "Backend",
-      items: ["Node.js", "Express.js", "REST APIs", "MongoDB", "PostgreSQL"],
+      items: [
+        { name: "Node.js",     icon: "nodedotjs" },
+        { name: "Express.js",  icon: "express",   invertDark: true },
+        { name: "REST APIs",   icon: "fastapi" },
+        { name: "MongoDB",     icon: "mongodb" },
+        { name: "PostgreSQL",  icon: "postgresql" },
+      ],
     },
     {
       category: "Tools",
-      items: ["Git", "GitHub", "Postman", "LangChain", "Pinecone (Vector DB)"],
+      items: [
+        { name: "Git",                  icon: "git" },
+        { name: "GitHub",               icon: "github",   invertDark: true },
+        { name: "Postman",              icon: "postman" },
+        { name: "LangChain",            icon: "langchain" },
+        { name: "Pinecone (Vector DB)", icon: "pinecone", customSvg: true },
+      ],
     },
   ];
 
@@ -136,6 +167,110 @@ export default function Home() {
         "Final year Computer Science Engineering student, GPA 7.57/10.0, with hands-on experience in full-stack development, RESTful API design, and scalable backend systems.",
     },
   ];
+
+  const { theme, setTheme } = useTheme();
+
+  // ── Search data ──────────────────────────────────────────────────────────
+  type SearchItem = {
+    label: string;
+    sectionId?: string;   // internal scroll target
+    href?: string;        // external link
+    category: string;
+  };
+
+  const defaultSections: { title: string; items: SearchItem[] }[] = [
+    {
+      title: "PAGES",
+      items: [
+        { label: "Home",     sectionId: "hero",     category: "Pages" },
+        { label: "Projects", sectionId: "projects", category: "Pages" },
+        { label: "Skills",   sectionId: "skills",   category: "Pages" },
+        { label: "Logs",     sectionId: "blog",     category: "Pages" },
+        { label: "Contact",  sectionId: "contact",  category: "Pages" },
+      ],
+    },
+    {
+      title: "ELSEWHERE",
+      items: [
+        { label: "GitHub",    href: "https://github.com/shauryasingh0302",       category: "Elsewhere" },
+        { label: "LinkedIn",  href: "https://linkedin.com/in/shauryasingh0302",  category: "Elsewhere" },
+        { label: "Email",     href: "mailto:shauryasingh0302@icloud.com",        category: "Elsewhere" },
+      ],
+    },
+  ];
+
+  const allSearchItems: SearchItem[] = [
+    ...projects.map((p) => ({ label: p.title, sectionId: "projects", category: "Projects" })),
+    ...skills.map((s)   => ({ label: s.category, sectionId: "skills",   category: "Skills"   })),
+    ...blogPosts.map((p) => ({ label: p.title, sectionId: "blog",      category: "Logs"     })),
+    { label: "Home",     sectionId: "hero",     category: "Pages" },
+    { label: "Projects", sectionId: "projects", category: "Pages" },
+    { label: "Skills",   sectionId: "skills",   category: "Pages" },
+    { label: "Logs",     sectionId: "blog",     category: "Pages" },
+    { label: "Contact",  sectionId: "contact",  category: "Pages" },
+    { label: "GitHub",   href: "https://github.com/shauryasingh0302",      category: "Elsewhere" },
+    { label: "LinkedIn", href: "https://linkedin.com/in/shauryasingh0302", category: "Elsewhere" },
+    { label: "Email",    href: "mailto:shauryasingh0302@icloud.com",       category: "Elsewhere" },
+  ];
+
+  const filteredItems: SearchItem[] = searchQuery.trim()
+    ? allSearchItems.filter((item) =>
+        item.label.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  // Group filtered results preserving category order
+  const filteredSections: { title: string; items: SearchItem[] }[] = [];
+  filteredItems.forEach((item) => {
+    const existing = filteredSections.find((s) => s.title === item.category.toUpperCase());
+    if (existing) existing.items.push(item);
+    else filteredSections.push({ title: item.category.toUpperCase(), items: [item] });
+  });
+
+  // Flat list for keyboard nav
+  const activeSections = searchQuery.trim() ? filteredSections : defaultSections;
+  const flatItems: SearchItem[] = activeSections.flatMap((s) => s.items);
+
+  // Reset active index on query / open changes
+  useEffect(() => { setActiveIndex(0); }, [searchQuery, searchOpen]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+        setSearchQuery("");
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setSearchQuery("");
+      }
+      if (!searchOpen) return;
+      const len = flatItems.length;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActiveIndex((prev) => (prev + 1) % len);
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActiveIndex((prev) => (prev - 1 + len) % len);
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const item = flatItems[activeIndex];
+        if (!item) return;
+        setSearchOpen(false);
+        setSearchQuery("");
+        if (item.href) {
+          window.open(item.href, "_blank", "noopener");
+        } else if (item.sectionId) {
+          document.getElementById(item.sectionId)?.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [searchOpen, activeIndex, flatItems]);
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground overflow-x-hidden">
@@ -168,15 +303,47 @@ export default function Home() {
             Contact
           </Link>
         </nav>
-        <Button
-          variant="outline"
-          className="font-mono text-xs border-primary/50 hover:bg-primary/10 hover:text-primary hover:border-primary"
-          asChild
-        >
-          <a href="/resume/shaurya_resume_04.pdf" download>
+        <div className="flex items-center gap-1 md:gap-3">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-muted/40 text-muted-foreground hover:text-foreground hover:bg-muted/70 hover:border-border/80 transition-all text-sm"
+            aria-label="Search"
+          >
+            <Search className="size-3.5" />
+            <span className="font-sans">Search</span>
+            <kbd className="inline-flex items-center gap-0.5 text-[10px] font-mono border border-border/70 rounded px-1 py-0.5 bg-background/50">
+              <span>⌘</span>K
+            </kbd>
+          </button>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="md:hidden size-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
+            aria-label="Search"
+          >
+            <Search className="size-4" />
+          </button>
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="relative flex items-center justify-center size-9 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Toggle theme"
+          >
+            <Sun className="size-[18px] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute size-[18px] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </button>
+          <a
+            href="/resume/shaurya_resume_04.pdf"
+            download
+            className="inline-flex items-center px-4 py-1.5 rounded-lg font-mono text-xs tracking-wider uppercase text-white transition-colors"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(255,255,255,0.18)",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.1)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)"; }}
+          >
             shaurya_resume_04.pdf
           </a>
-        </Button>
+        </div>
       </Container>
 
       {/* Hero Section */}
@@ -421,7 +588,13 @@ export default function Home() {
         wrapperClassName="py-24 border-t border-border"
         className="mx-auto max-w-7xl flex-1"
       >
-        <div className="grid justify-between items-end mb-16 gap-4">
+        <motion.div
+          className="grid justify-between items-end mb-16 gap-4"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div>
             <h2 className="text-4xl md:text-6xl font-display tracking-tighter mb-4">
               SELECTED
@@ -434,53 +607,61 @@ export default function Home() {
             A collection of full-stack, AI-integrated, and production-ready
             applications.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-[repeat(3,auto)] gap-6">
           {projects.map((project, index) => (
-            <Card
+            <motion.div
               key={index}
-              className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 rounded-none overflow-hidden grid grid-rows-subgrid row-span-3 content-start items-start"
+              className="grid grid-rows-subgrid row-span-3"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <ProjectImage src={project.image} alt={project.title} />
-              <div className="grid gap-4">
-                <CardHeader className="grid gap-4">
-                  <CardTitle className="text-2xl font-display group-hover:text-primary transition-colors">
-                    {project.title}
-                  </CardTitle>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="secondary"
-                        className="font-mono text-xs"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base">
-                    {project.description}
-                  </CardDescription>
-                </CardContent>
-              </div>
-              <CardFooter className="flex justify-between pt-0">
-                <Link
-                  href={project.link}
-                  className="text-sm font-display flex items-center hover:text-primary transition-colors gap-2"
-                >
-                  LIVE DEMO <ExternalLink className="size-3" />
-                </Link>
-                <Link
-                  href={project.repo}
-                  className="text-sm font-display flex items-center hover:text-primary transition-colors gap-2"
-                >
-                  CODE <Github className="size-3" />
-                </Link>
-              </CardFooter>
-            </Card>
+              <Card
+                className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 rounded-none overflow-hidden grid grid-rows-subgrid row-span-3 content-start items-start h-full"
+              >
+                <ProjectImage src={project.image} alt={project.title} />
+                <div className="grid gap-4">
+                  <CardHeader className="grid gap-4">
+                    <CardTitle className="text-2xl font-display group-hover:text-primary transition-colors">
+                      {project.title}
+                    </CardTitle>
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="font-mono text-xs"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base">
+                      {project.description}
+                    </CardDescription>
+                  </CardContent>
+                </div>
+                <CardFooter className="flex justify-between pt-0">
+                  <Link
+                    href={project.link}
+                    className="text-sm font-display flex items-center hover:text-primary transition-colors gap-2"
+                  >
+                    LIVE DEMO <ExternalLink className="size-3" />
+                  </Link>
+                  <Link
+                    href={project.repo}
+                    className="text-sm font-display flex items-center hover:text-primary transition-colors gap-2"
+                  >
+                    CODE <Github className="size-3" />
+                  </Link>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </Container>
@@ -492,7 +673,13 @@ export default function Home() {
         className="mx-auto max-w-7xl flex-1"
       >
         <div className="grid md:grid-cols-12 gap-12">
-          <div className="md:col-span-4">
+          <motion.div
+            className="md:col-span-4"
+            initial={{ opacity: 0, x: -32 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
             <h2 className="text-4xl font-display tracking-tighter mb-6">
               TECH_STACK
             </h2>
@@ -518,28 +705,59 @@ export default function Home() {
                 <span className="font-mono text-xs">RAG_PIPELINES</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           <div className="md:col-span-8 grid sm:grid-cols-3 gap-8">
             {skills.map((skillGroup, idx) => (
-              <div key={idx} className="space-y-6">
+              <motion.div
+                key={idx}
+                className="space-y-4"
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <h3 className="text-xl font-display border-b border-primary/30 pb-2 inline-block">
                   {skillGroup.category}
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-2.5">
                   {skillGroup.items.map((skill, sIdx) => (
-                    <li
+                    <motion.li
                       key={sIdx}
-                      className="flex items-center justify-between group"
+                      className="flex items-center gap-3 group"
+                      initial={{ opacity: 0, x: 12 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.35, delay: idx * 0.1 + sIdx * 0.06, ease: "easeOut" }}
                     >
-                      <span className="font-mono text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                        {skill}
+                      {/* Brand icon */}
+                      <span className="flex-shrink-0 size-5 flex items-center justify-center">
+                        {skill.customSvg ? (
+                          /* Pinecone custom SVG */
+                          <svg width="18" height="18" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-70 group-hover:opacity-100 transition-opacity">
+                            <path d="M50 8 L62 32 L75 28 L63 50 L78 48 L58 72 L65 70 L50 92 L35 70 L42 72 L22 48 L37 50 L25 28 L38 32 Z" fill="currentColor" className="text-muted-foreground group-hover:text-foreground transition-colors" />
+                            <rect x="44" y="88" width="12" height="10" rx="3" fill="currentColor" className="text-muted-foreground group-hover:text-foreground transition-colors" />
+                          </svg>
+                        ) : (
+                          <img
+                            src={`https://cdn.simpleicons.org/${skill.icon}`}
+                            alt={skill.name}
+                            width={18}
+                            height={18}
+                            className={`object-contain opacity-70 group-hover:opacity-100 transition-opacity ${
+                              skill.invertDark ? "dark:invert" : ""
+                            }`}
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                          />
+                        )}
                       </span>
-                      <div className="h-[2px] w-12 bg-secondary group-hover:bg-primary transition-colors"></div>
-                    </li>
+                      <span className="font-mono text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                        {skill.name}
+                      </span>
+                    </motion.li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -549,32 +767,52 @@ export default function Home() {
         id="blog"
         className="py-24 border-t border-border max-w-7xl mx-auto"
       >
-        <h2 className="text-4xl font-display mb-12 uppercase">
+        <motion.h2
+          className="text-4xl font-display mb-12 uppercase"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
           Achievements & Experience
-        </h2>
+        </motion.h2>
 
         <div className="grid gap-8">
           {blogPosts.map((post, index) => (
-            <Link href="#" key={index} className="group">
-              <div className="grid gap-4 md:grid-cols-[1fr_auto] items-baseline justify-between mb-2">
-                <h3 className="text-2xl font-display group-hover:text-primary transition-colors text-balance">
-                  {post.title}
-                </h3>
-                <span className="font-mono text-xs text-muted-foreground whitespace-nowrap">
-                  {post.date}{" // "}{post.readTime}
-                </span>
-              </div>
-              <p className="text-muted-foreground mb-4 max-w-2xl">
-                {post.excerpt}
-              </p>
-              <div className="h-[1px] w-full bg-border group-hover:bg-primary/50 transition-colors"></div>
-            </Link>
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.45, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Link href="#" className="group">
+                <div className="grid gap-4 md:grid-cols-[1fr_auto] items-baseline justify-between mb-2">
+                  <h3 className="text-2xl font-display group-hover:text-primary transition-colors text-balance">
+                    {post.title}
+                  </h3>
+                  <span className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                    {post.date}{" // "}{post.readTime}
+                  </span>
+                </div>
+                <p className="text-muted-foreground mb-4 max-w-2xl">
+                  {post.excerpt}
+                </p>
+                <div className="h-[1px] w-full bg-border group-hover:bg-primary/50 transition-colors"></div>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </Container>
       {/* Contact Section */}
       <Container id="contact" className="py-24 bg-card border-t border-border">
-        <div className="max-w-2xl justify-self-center">
+        <motion.div
+          className="max-w-2xl justify-self-center"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div className="text-center mb-12">
             <h2 className="text-4xl font-display mb-4">INITIATE_CONTACT</h2>
             <p className="text-muted-foreground">
@@ -583,7 +821,35 @@ export default function Home() {
             </p>
           </div>
 
-          <form className="grid gap-6">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const form = e.currentTarget;
+              const data = new FormData(form);
+              data.set("_captcha", "true");
+              data.set("_template", "table");
+              try {
+                await fetch("https://formsubmit.co/shauryasingh0302@icloud.com", {
+                  method: "POST",
+                  body: data,
+                });
+                form.reset();
+                setToast({ visible: true, message: "Your message has been communicated." });
+                setTimeout(
+                  () => setToast({ visible: false, message: "" }),
+                  4000
+                );
+              } catch {
+                setToast({ visible: true, message: "Failed to send. Please try again." });
+                setTimeout(
+                  () => setToast({ visible: false, message: "" }),
+                  4000
+                );
+              }
+            }}
+            className="grid gap-6"
+          >
+            <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label
@@ -592,7 +858,7 @@ export default function Home() {
                 >
                   NAME
                 </label>
-                <Input id="name" placeholder="John Doe" />
+                <Input id="name" name="name" placeholder="John Doe" required />
               </div>
               <div className="space-y-2">
                 <label
@@ -601,7 +867,13 @@ export default function Home() {
                 >
                   EMAIL
                 </label>
-                <Input id="email" type="email" placeholder="john@example.com" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="john@example.com"
+                  required
+                />
               </div>
             </div>
             <div className="space-y-2">
@@ -613,15 +885,38 @@ export default function Home() {
               </label>
               <Textarea
                 id="message"
+                name="message"
                 placeholder="Enter your message..."
                 className="min-h-[150px]"
+                required
               />
             </div>
             <Button type="submit" className="w-full" size="lg">
               SEND TRANSMISSION
             </Button>
           </form>
-        </div>
+          {/* Toast */}
+          {toast.visible && (
+            <div className="fixed bottom-8 right-8 z-[100] animate-in slide-in-from-bottom-4 fade-in duration-300">
+              <div className="bg-card border border-border shadow-lg px-6 py-4 flex items-center gap-3 text-sm">
+                <svg
+                  className="size-5 text-primary shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span className="font-mono text-foreground">{toast.message}</span>
+              </div>
+            </div>
+          )}
+        </motion.div>
       </Container>
       {/* Footer */}
       <Container
@@ -654,6 +949,108 @@ export default function Home() {
           </div>
         </div>
       </Container>
+
+      {/* Search overlay */}
+      {searchOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-start justify-center pt-[8vh] px-4"
+          ref={searchRef}
+        >
+          {/* backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+          />
+
+          {/* modal */}
+          <div className="relative w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl" style={{ background: "#161616", border: "1px solid rgba(255,255,255,0.08)" }}>
+
+            {/* ── Input row ── */}
+            <div className="flex items-center gap-3 px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <Search className="size-4 shrink-0" style={{ color: "rgba(255,255,255,0.35)" }} />
+              <input
+                autoFocus
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search pages, writing, projects, talks…"
+                className="flex-1 bg-transparent border-none outline-none text-white text-[15px] placeholder:text-white/30 font-sans"
+              />
+              <kbd
+                className="inline-flex items-center font-mono cursor-pointer select-none px-2 py-0.5 rounded text-[11px]"
+                style={{ color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.05)" }}
+                onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+              >
+                ESC
+              </kbd>
+            </div>
+
+            {/* ── Results ── */}
+            <div className="overflow-y-auto" style={{ maxHeight: "520px" }}>
+              {searchQuery.trim() && filteredSections.length === 0 ? (
+                <div className="px-5 py-10 text-center text-sm font-mono" style={{ color: "rgba(255,255,255,0.25)" }}>
+                  No results for &ldquo;{searchQuery}&rdquo;
+                </div>
+              ) : (
+                (() => {
+                  let globalIndex = 0;
+                  const sections = searchQuery.trim() ? filteredSections : defaultSections;
+                  return sections.map((section) => (
+                    <div key={section.title}>
+                      {/* Section header */}
+                      <div
+                        className="px-5 pt-5 pb-2 text-[10px] font-mono tracking-widest uppercase"
+                        style={{ color: "rgba(255,255,255,0.3)" }}
+                      >
+                        {section.title}
+                      </div>
+
+                      {/* Section items */}
+                      {section.items.map((item) => {
+                        const idx = globalIndex++;
+                        const isActive = idx === activeIndex;
+                        return (
+                          <button
+                            key={item.label}
+                            onMouseEnter={() => setActiveIndex(idx)}
+                            onClick={() => {
+                              setSearchOpen(false);
+                              setSearchQuery("");
+                              if (item.href) {
+                                window.open(item.href, "_blank", "noopener");
+                              } else if (item.sectionId) {
+                                document.getElementById(item.sectionId)?.scrollIntoView({ behavior: "smooth" });
+                              }
+                            }}
+                            className="w-full flex items-center justify-between px-5 py-3 text-left text-[16px] font-sans transition-colors"
+                            style={{
+                              background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
+                              color: isActive ? "#fff" : "rgba(255,255,255,0.75)",
+                            }}
+                          >
+                            <span>{item.label}</span>
+                            {item.href && (
+                              <svg
+                                width="12" height="12" viewBox="0 0 12 12"
+                                fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style={{ color: "rgba(255,255,255,0.3)", flexShrink: 0, marginLeft: "8px" }}
+                              >
+                                <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ));
+                })()
+              )}
+              {/* bottom padding */}
+              <div className="h-3" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
