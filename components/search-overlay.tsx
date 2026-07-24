@@ -4,7 +4,6 @@ import { Search } from "lucide-react";
 import type { SearchItem } from "@/lib/portfolio-data";
 
 interface SearchOverlayProps {
-  searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -15,7 +14,6 @@ interface SearchOverlayProps {
 }
 
 export function SearchOverlay({
-  searchOpen,
   setSearchOpen,
   searchQuery,
   setSearchQuery,
@@ -73,7 +71,7 @@ export function SearchOverlay({
                 </div>
 
                 {/* Section items */}
-                {section.items.map((item, i) => {
+                {section.items.map((item) => {
                   const idx = flatItems.indexOf(item);
                   const isActive = idx === activeIndex;
                   return (

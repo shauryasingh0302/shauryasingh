@@ -5,11 +5,10 @@ import { useTheme } from "next-themes";
 import { Container } from "@/components/zippystarter/container";
 
 interface HeaderProps {
-  searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
 }
 
-export function Header({ searchOpen, setSearchOpen }: HeaderProps) {
+export function Header({ setSearchOpen }: HeaderProps) {
   const { theme, setTheme } = useTheme();
 
   return (

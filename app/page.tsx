@@ -16,9 +16,19 @@ import {
 } from "@/lib/portfolio-data";
 
 export default function Home() {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpenRaw] = useState(false);
+  const [searchQuery, setSearchQueryRaw] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const setSearchOpen = (open: React.SetStateAction<boolean>) => {
+    setSearchOpenRaw(open);
+    setActiveIndex(0);
+  };
+
+  const setSearchQuery = (q: React.SetStateAction<string>) => {
+    setSearchQueryRaw(q);
+    setActiveIndex(0);
+  };
 
   const filteredItems: SearchItem[] = searchQuery.trim()
     ? allSearchItems.filter((item) =>
@@ -35,8 +45,6 @@ export default function Home() {
 
   const activeSections = searchQuery.trim() ? filteredSections : defaultSections;
   const flatItems: SearchItem[] = activeSections.flatMap((s) => s.items);
-
-  useEffect(() => { setActiveIndex(0); }, [searchQuery, searchOpen]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -78,7 +86,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground overflow-x-hidden">
-      <Header searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
+      <Header setSearchOpen={setSearchOpen} />
       <Hero />
       <Projects />
       <Skills />
@@ -87,7 +95,6 @@ export default function Home() {
       <Footer />
       {searchOpen && (
         <SearchOverlay
-          searchOpen={searchOpen}
           setSearchOpen={setSearchOpen}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
