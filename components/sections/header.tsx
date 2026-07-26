@@ -17,12 +17,12 @@ export function Header({ setSearchOpen }: HeaderProps) {
       wrapperClassName="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border"
       className="mx-auto max-w-7xl flex items-center justify-between h-16 uppercase"
     >
-      <button
+      <div
+        className="text-xl font-bold font-mono tracking-tighter cursor-pointer"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="text-xl font-bold font-mono tracking-tighter"
       >
         Shaurya<span className="text-primary">_</span>Singh
-      </button>
+      </div>
       <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground ">
         <button
           onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
