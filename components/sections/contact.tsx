@@ -110,12 +110,10 @@ export function Contact() {
             const data = new FormData(form);
             const json: Record<string, string> = {};
             data.forEach((value, key) => { json[key] = value.toString(); });
-            json._captcha = "false";
-            json._template = "table";
             try {
-              const res = await fetch("https://formsubmit.co/ajax/shauryasingh0302@icloud.com", {
+              const res = await fetch("/api/contact", {
                 method: "POST",
-                headers: { "Content-Type": "application/json", Accept: "application/json" },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(json),
               });
               const result = await res.json();

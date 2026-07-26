@@ -22,6 +22,8 @@ export function SearchOverlay({
   sections,
   flatItems,
 }: SearchOverlayProps) {
+  const safeSections = sections ?? [];
+  const safeFlatItems = flatItems ?? [];
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[8vh] px-4">
       {/* backdrop */}
@@ -55,12 +57,12 @@ export function SearchOverlay({
 
         {/* ── Results ── */}
         <div className="overflow-y-auto" style={{ maxHeight: "520px" }}>
-          {searchQuery.trim() && sections.every((s) => s.items.length === 0) ? (
+          {searchQuery.trim() && safeSections.every((s) => s.items.length === 0) ? (
             <div className="px-5 py-10 text-center text-sm font-mono" style={{ color: "rgba(255,255,255,0.25)" }}>
               No results for &ldquo;{searchQuery}&rdquo;
             </div>
           ) : (
-            sections.map((section) => (
+            safeSections.map((section) => (
               <div key={section.title}>
                 {/* Section header */}
                 <div
@@ -71,8 +73,8 @@ export function SearchOverlay({
                 </div>
 
                 {/* Section items */}
-                {section.items.map((item) => {
-                  const idx = flatItems.indexOf(item);
+                {(section.items ?? []).map((item) => {
+                  const idx = safeFlatItems.indexOf(item);
                   const isActive = idx === activeIndex;
                   return (
                     <button

@@ -152,7 +152,7 @@ export function Skills() {
                 {skillGroup.category}
               </h3>
               <ul className="space-y-2.5">
-                {skillGroup.items.map((skill, sIdx) => (
+                {(skillGroup.items ?? []).map((skill, sIdx) => (
                   <li
                     key={sIdx}
                     className="skill-item flex items-center gap-3 group"
