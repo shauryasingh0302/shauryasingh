@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ElementType, type ReactNode } from "react";
 import { useGsapReady } from "./gsap-provider";
 
 interface TextRevealProps {
@@ -17,7 +17,7 @@ interface TextRevealProps {
   /** Use ScrollTrigger */
   scrollTrigger?: boolean;
   /** HTML tag to render */
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
 }
 
 export function TextReveal({
@@ -130,7 +130,7 @@ export function TextReveal({
     };
   }, [ready, variant, delay, duration, stagger, scrollTrigger]);
 
-  const TagComponent = Tag as React.ElementType;
+  const TagComponent = Tag;
 
   return (
     <TagComponent ref={containerRef} className={className}>

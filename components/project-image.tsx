@@ -7,16 +7,18 @@ import { cn } from "@/lib/utils";
 interface ProjectImageProps {
   src: string;
   alt: string;
+  className?: string;
 }
 
-export function ProjectImage({ src, alt }: ProjectImageProps) {
+export function ProjectImage({ src, alt, className }: ProjectImageProps) {
   const [loaded, setLoaded] = useState(false);
 
   return (
     <div
       className={cn(
         "bg-primary relative aspect-square overflow-hidden border-b border-border transition-opacity duration-500",
-        loaded ? "opacity-100" : "opacity-0"
+        loaded ? "opacity-100" : "opacity-0",
+        className
       )}
     >
       <Image
