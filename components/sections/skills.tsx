@@ -1,11 +1,110 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { Code2, Database, Cpu, Terminal } from "lucide-react";
 import { Container } from "@/components/zippystarter/container";
 import { skills } from "@/lib/portfolio-data";
+import { useGsapReady } from "@/components/gsap/gsap-provider";
 
 export function Skills() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const gsapReady = useGsapReady();
+
+  useEffect(() => {
+    if (!gsapReady || !sectionRef.current) return;
+
+    let ctx: { revert: () => void } | null = null;
+
+    async function animate() {
+      const gsap = (await import("gsap")).default;
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      gsap.registerPlugin(ScrollTrigger);
+
+      const el = sectionRef.current;
+      if (!el) return;
+
+      ctx = gsap.context(() => {
+        // Left panel slides in from left
+        gsap.fromTo(
+          ".skills-left",
+          { x: -60, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ".skills-left",
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+
+        // Icon boxes stagger in with rotation
+        gsap.fromTo(
+          ".skills-icon-box",
+          { scale: 0, rotation: -15, opacity: 0 },
+          {
+            scale: 1,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+              trigger: ".skills-icon-grid",
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+
+        // Skill columns stagger in
+        gsap.fromTo(
+          ".skill-column",
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ".skills-right",
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+
+        // Individual skill items slide in from right
+        gsap.fromTo(
+          ".skill-item",
+          { x: 20, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.35,
+            stagger: 0.04,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".skills-right",
+              start: "top 80%",
+              once: true,
+            },
+          }
+        );
+      }, el);
+    }
+
+    animate();
+
+    return () => {
+      ctx?.revert();
+    };
+  }, [gsapReady]);
+
   return (
     <Container
       id="skills"
@@ -13,14 +112,8 @@ export function Skills() {
       wrapperClassName="py-24 bg-secondary/20 border-t border-border"
       className="mx-auto max-w-7xl flex-1"
     >
-      <div className="grid md:grid-cols-12 gap-12">
-        <motion.div
-          className="md:col-span-4"
-          initial={{ opacity: 0, x: -32 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
+      <div ref={sectionRef} className="grid md:grid-cols-12 gap-12">
+        <div className="skills-left md:col-span-4" style={{ opacity: 0 }}>
           <h2 className="text-4xl font-display tracking-tighter mb-6">
             TECH_STACK
           </h2>
@@ -28,48 +121,42 @@ export function Skills() {
             My preferred weapons of choice for building digital products.
             Always learning, always evolving.
           </p>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors">
+          <div className="skills-icon-grid grid grid-cols-2 gap-4">
+            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
               <Code2 className="h-8 w-8 mb-2 text-primary" />
               <span className="font-mono text-xs">CLEAN_CODE</span>
             </div>
-            <div className="p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors">
+            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
               <Database className="h-8 w-8 mb-2 text-primary" />
               <span className="font-mono text-xs">SCALABLE_DB</span>
             </div>
-            <div className="p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors">
+            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
               <Cpu className="h-8 w-8 mb-2 text-primary" />
               <span className="font-mono text-xs">GEN_AI</span>
             </div>
-            <div className="p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors">
+            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
               <Terminal className="h-8 w-8 mb-2 text-primary" />
               <span className="font-mono text-xs">RAG_PIPELINES</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <div className="md:col-span-8 grid sm:grid-cols-3 gap-8">
+        <div className="skills-right md:col-span-8 grid sm:grid-cols-3 gap-8">
           {skills.map((skillGroup, idx) => (
-            <motion.div
+            <div
               key={idx}
-              className="space-y-4"
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              className="skill-column space-y-4"
+              style={{ opacity: 0 }}
             >
               <h3 className="text-xl font-display border-b border-primary/30 pb-2 inline-block">
                 {skillGroup.category}
               </h3>
               <ul className="space-y-2.5">
                 {skillGroup.items.map((skill, sIdx) => (
-                  <motion.li
+                  <li
                     key={sIdx}
-                    className="flex items-center gap-3 group"
-                    initial={{ opacity: 0, x: 12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.35, delay: idx * 0.1 + sIdx * 0.06, ease: "easeOut" }}
+                    className="skill-item flex items-center gap-3 group"
+                    style={{ opacity: 0 }}
                   >
                     {/* Brand icon */}
                     <span className="flex-shrink-0 size-5 flex items-center justify-center">
@@ -95,10 +182,10 @@ export function Skills() {
                     <span className="font-mono text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                       {skill.name}
                     </span>
-                  </motion.li>
+                  </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

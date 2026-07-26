@@ -7,6 +7,7 @@ import { Container } from "@/components/zippystarter/container";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CONTACT_EMAIL } from "@/lib/portfolio-data";
+import { useGsapReady } from "@/components/gsap/gsap-provider";
 
 function getTerminalResponse(rawCommand: string) {
   const cmd = rawCommand.trim().toLowerCase();
@@ -25,8 +26,87 @@ export function Hero() {
   const [terminalHistory, setTerminalHistory] = useState<{ command: string; response: string }[]>([]);
   const terminalInputRef = useRef<HTMLInputElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroVisible, setHeroVisible] = useState(true);
   const [terminalReady, setTerminalReady] = useState(false);
+  const gsapReady = useGsapReady();
+
+  // GSAP entrance animation for hero content
+  useEffect(() => {
+    if (!gsapReady || !heroContentRef.current) return;
+
+    let ctx: { revert: () => void } | null = null;
+
+    async function runAnimation() {
+      const gsap = (await import("gsap")).default;
+      const el = heroContentRef.current;
+      if (!el) return;
+
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+        // Badge slides in from left
+        tl.fromTo(
+          ".hero-badge",
+          { x: -40, opacity: 0, scale: 0.9 },
+          { x: 0, opacity: 1, scale: 1, duration: 0.8 },
+          0.2
+        );
+
+        // Heading lines stagger in with clip-path reveal
+        tl.fromTo(
+          ".hero-heading-line",
+          { y: 80, opacity: 0, clipPath: "inset(100% 0% 0% 0%)" },
+          {
+            y: 0,
+            opacity: 1,
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 1,
+            stagger: 0.15,
+          },
+          0.3
+        );
+
+        // Description paragraph fades up
+        tl.fromTo(
+          ".hero-desc",
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7 },
+          0.9
+        );
+
+        // NOW line slides in
+        tl.fromTo(
+          ".hero-now",
+          { x: -20, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5 },
+          1.1
+        );
+
+        // CTA buttons scale up
+        tl.fromTo(
+          ".hero-cta",
+          { y: 20, opacity: 0, scale: 0.95 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.6 },
+          1.2
+        );
+
+        // Terminal window slides in from right
+        tl.fromTo(
+          ".hero-terminal",
+          { x: 60, opacity: 0, scale: 0.95 },
+          { x: 0, opacity: 1, scale: 1, duration: 1, ease: "power3.out" },
+          0.5
+        );
+      }, el);
+    }
+
+    runAnimation();
+
+    return () => {
+      ctx?.revert();
+    };
+  }, [gsapReady]);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -82,9 +162,9 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
       </div>
 
-      <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+      <div ref={heroContentRef} className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs font-mono">
+          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs font-mono" style={{ opacity: 0 }}>
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
@@ -92,24 +172,24 @@ export function Hero() {
             OPEN TO INTERNSHIP & FULL-TIME ROLES
           </div>
           <h1 className="text-6xl md:text-8xl font-display tracking-tighter leading-[0.9]">
-            FULL
+            <span className="hero-heading-line inline-block" style={{ opacity: 0 }}>FULL</span>
             <br />
-            STACK
+            <span className="hero-heading-line inline-block" style={{ opacity: 0 }}>STACK</span>
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-foreground">
+            <span className="hero-heading-line inline-block text-transparent bg-clip-text bg-gradient-to-r from-primary to-foreground" style={{ opacity: 0 }}>
               DEV_
             </span>
           </h1>
-          <p className="md:text-xl text-muted-foreground max-w-md leading-relaxed">
+          <p className="hero-desc md:text-xl text-muted-foreground max-w-md leading-relaxed" style={{ opacity: 0 }}>
             Final year Computer Science Engineering student building
             full-stack and AI-integrated products. National-level hackathon
             winner with a track record of shipping production-ready
             applications.
           </p>
-          <p className="font-mono text-xs text-primary/80 tracking-wide">
+          <p className="hero-now font-mono text-xs text-primary/80 tracking-wide" style={{ opacity: 0 }}>
             NOW: shipping a final-year capstone project
           </p>
-          <div className="flex gap-4 pt-4 items-center">
+          <div className="hero-cta flex gap-4 pt-4 items-center" style={{ opacity: 0 }}>
             <Link
               href="#projects"
               className={cn("uppercase", buttonVariants({ size: "lg" }))}
@@ -146,7 +226,7 @@ export function Hero() {
         </div>
 
         {/* Decorative Abstract Element — terminal window */}
-        <div className="hidden md:block relative h-[500px] w-full border border-border/30 bg-card/40 backdrop-blur-sm overflow-hidden">
+        <div className="hero-terminal hidden md:block relative h-[500px] w-full border border-border/30 bg-card/40 backdrop-blur-sm overflow-hidden" style={{ opacity: 0 }}>
           <div className="absolute top-0 left-0 size-4 border-t-2 border-l-2 border-primary"></div>
           <div className="absolute top-0 right-0 size-4 border-t-2 border-r-2 border-primary"></div>
           <div className="absolute bottom-0 left-0 size-4 border-b-2 border-l-2 border-primary"></div>

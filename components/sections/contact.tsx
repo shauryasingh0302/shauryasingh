@@ -1,28 +1,100 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Container } from "@/components/zippystarter/container";
+import { useGsapReady } from "@/components/gsap/gsap-provider";
 
 export function Contact() {
   const [toast, setToast] = useState<{ visible: boolean; message: string }>({
     visible: false,
     message: "",
   });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const gsapReady = useGsapReady();
+
+  useEffect(() => {
+    if (!gsapReady || !sectionRef.current) return;
+
+    let ctx: { revert: () => void } | null = null;
+
+    async function animate() {
+      const gsap = (await import("gsap")).default;
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      gsap.registerPlugin(ScrollTrigger);
+
+      const el = sectionRef.current;
+      if (!el) return;
+
+      ctx = gsap.context(() => {
+        // Heading and description
+        gsap.fromTo(
+          ".contact-header",
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: ".contact-header",
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+
+        // Form fields stagger in
+        gsap.fromTo(
+          ".contact-field",
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ".contact-form",
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+
+        // Submit button scales in
+        gsap.fromTo(
+          ".contact-submit",
+          { y: 20, opacity: 0, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            ease: "back.out(1.4)",
+            scrollTrigger: {
+              trigger: ".contact-submit",
+              start: "top 90%",
+              once: true,
+            },
+          }
+        );
+      }, el);
+    }
+
+    animate();
+
+    return () => {
+      ctx?.revert();
+    };
+  }, [gsapReady]);
 
   return (
     <Container id="contact" className="py-24 bg-card border-t border-border">
-      <motion.div
-        className="max-w-2xl justify-self-center"
-        initial={{ opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="text-center mb-12">
+      <div ref={sectionRef} className="max-w-2xl justify-self-center">
+        <div className="contact-header text-center mb-12" style={{ opacity: 0 }}>
           <h2 className="text-4xl font-display mb-4">INITIATE_CONTACT</h2>
           <p className="text-muted-foreground">
             Have a project in mind, an internship opening, or a role to
@@ -31,6 +103,7 @@ export function Contact() {
         </div>
 
         <form
+          className="contact-form grid gap-6"
           onSubmit={async (e) => {
             e.preventDefault();
             const form = e.currentTarget;
@@ -58,10 +131,9 @@ export function Contact() {
               setTimeout(() => setToast({ visible: false, message: "" }), 4000);
             }
           }}
-          className="grid gap-6"
         >
           <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="contact-field grid md:grid-cols-2 gap-6" style={{ opacity: 0 }}>
             <div className="space-y-2">
               <label
                 htmlFor="name"
@@ -87,7 +159,7 @@ export function Contact() {
               />
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="contact-field space-y-2" style={{ opacity: 0 }}>
             <label
               htmlFor="message"
               className="text-xs font-mono text-muted-foreground"
@@ -102,9 +174,11 @@ export function Contact() {
               required
             />
           </div>
-          <Button type="submit" className="w-full" size="lg">
-            SEND TRANSMISSION
-          </Button>
+          <div className="contact-submit" style={{ opacity: 0 }}>
+            <Button type="submit" className="w-full" size="lg">
+              SEND TRANSMISSION
+            </Button>
+          </div>
         </form>
         {/* Toast */}
         {toast.visible && (
@@ -127,7 +201,7 @@ export function Contact() {
             </div>
           </div>
         )}
-      </motion.div>
+      </div>
     </Container>
   );
 }
