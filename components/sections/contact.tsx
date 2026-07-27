@@ -107,7 +107,7 @@ export function Contact() {
         </div>
 
         <form
-          className="contact-form grid gap-6 bg-card/90 backdrop-blur-sm p-8 border border-border shadow-2xl relative z-20"
+          className="contact-form grid gap-6 bg-card p-8 border border-border shadow-2xl relative z-20"
           onSubmit={async (e) => {
             e.preventDefault();
             const form = e.currentTarget;
@@ -143,7 +143,7 @@ export function Contact() {
               >
                 NAME
               </label>
-              <Input id="name" name="name" placeholder="John Doe" required />
+              <Input id="name" name="name" placeholder="John Doe" required className="bg-background" />
             </div>
             <div className="space-y-2">
               <label
@@ -158,6 +158,7 @@ export function Contact() {
                 type="email"
                 placeholder="john@example.com"
                 required
+                className="bg-background"
               />
             </div>
           </div>
@@ -172,7 +173,7 @@ export function Contact() {
               id="message"
               name="message"
               placeholder="Enter your message..."
-              className="min-h-[150px]"
+              className="min-h-[150px] bg-background"
               required
             />
           </div>

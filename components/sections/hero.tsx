@@ -40,6 +40,7 @@ export function Hero() {
   const [terminalHistory, setTerminalHistory] = useState<{ command: string; response: string }[]>([]);
   const terminalInputRef = useRef<HTMLInputElement>(null);
   const terminalBodyRef = useRef<HTMLDivElement>(null);
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroVisible, setHeroVisible] = useState(true);
@@ -184,7 +185,10 @@ export function Hero() {
 
   useEffect(() => {
     if (!heroVisible || !terminalReady) return;
-    terminalInputRef.current?.focus();
+    // Do not auto-focus on mobile to prevent the page from scrolling down and keyboard from opening
+    if (window.innerWidth >= 768) {
+      terminalInputRef.current?.focus({ preventScroll: true });
+    }
     const handler = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key.length !== 1) return;
@@ -194,6 +198,30 @@ export function Hero() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [heroVisible, terminalReady]);
+
+  // Auto-center terminal on mobile when 80% visible
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth >= 768) return;
+    
+    const container = terminalContainerRef.current;
+    if (!container) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      // Trigger every time it crosses the 80% visibility threshold
+      if (entry.isIntersecting) {
+        const lenis = (window as any).lenis;
+        if (lenis && typeof lenis.scrollTo === 'function') {
+          lenis.scrollTo(container, { offset: -(window.innerHeight / 2 - container.offsetHeight / 2), duration: 1.2 });
+        } else {
+          container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }, { threshold: 0.8 });
+    
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -322,12 +350,22 @@ export function Hero() {
             NOW: shipping a final-year capstone project
           </p>
           <div className="hero-cta flex gap-4 pt-4 items-center" style={{ opacity: 0 }}>
-            <Link
-              href="#projects"
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (typeof window !== 'undefined') {
+                  const lenis = (window as any).lenis;
+                  if (lenis && typeof lenis.scrollTo === 'function') {
+                    lenis.scrollTo("#projects");
+                  } else {
+                    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }
+              }}
               className={cn("uppercase", buttonVariants({ size: "lg" }))}
             >
               View projects <ArrowRight className="size-4" />
-            </Link>
+            </button>
             <div className="flex gap-2">
               <Link
                 href="https://github.com/shauryasingh0302"
@@ -358,7 +396,7 @@ export function Hero() {
         </div>
 
         {/* Decorative Abstract Element — terminal window */}
-        <div className="hero-terminal relative h-[350px] md:h-[500px] mt-8 md:mt-0 w-full border border-border/30 bg-card/40 backdrop-blur-sm overflow-hidden" style={{ opacity: 0 }}>
+        <div ref={terminalContainerRef} className="hero-terminal relative h-[440px] md:h-[500px] mt-8 md:mt-0 w-full border border-border/30 bg-card/40 backdrop-blur-sm overflow-hidden" style={{ opacity: 0 }}>
           <div className="absolute top-0 left-0 size-4 border-t-2 border-l-2 border-primary"></div>
           <div className="absolute top-0 right-0 size-4 border-t-2 border-r-2 border-primary"></div>
           <div className="absolute bottom-0 left-0 size-4 border-b-2 border-l-2 border-primary"></div>

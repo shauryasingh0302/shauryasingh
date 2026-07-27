@@ -84,10 +84,12 @@ export function InteractiveFlow({ className }: { className?: string }) {
 
     const init = () => {
       const rect = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
       width = rect.width;
       height = rect.height;
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
 
       particles = [];
       const numParticles = Math.floor((width * height) / 5000); // Doubled density
@@ -116,6 +118,14 @@ export function InteractiveFlow({ className }: { className?: string }) {
       mouse.clientX = e.clientX;
       mouse.clientY = e.clientY;
       updateMousePosition();
+    };
+
+    const handleTouch = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouse.clientX = e.touches[0].clientX;
+        mouse.clientY = e.touches[0].clientY;
+        updateMousePosition();
+      }
     };
 
     const handleScroll = () => {
@@ -152,6 +162,9 @@ export function InteractiveFlow({ className }: { className?: string }) {
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchstart", handleTouch, { passive: true });
+    window.addEventListener("touchmove", handleTouch, { passive: true });
+    window.addEventListener("touchend", handleMouseLeave);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
@@ -159,6 +172,9 @@ export function InteractiveFlow({ className }: { className?: string }) {
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchstart", handleTouch);
+      window.removeEventListener("touchmove", handleTouch);
+      window.removeEventListener("touchend", handleMouseLeave);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -169,7 +185,7 @@ export function InteractiveFlow({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "absolute inset-0 z-0 overflow-hidden pointer-events-auto",
+        "absolute inset-0 z-0 overflow-hidden pointer-events-auto bg-black dark:bg-black",
         className
       )}
     >

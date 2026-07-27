@@ -34,10 +34,12 @@ export function InteractiveGrid({ className }: { className?: string }) {
 
     const init = () => {
       const rect = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
       width = rect.width;
       height = rect.height;
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
 
       dots = [];
       for (let x = spacing / 2; x < width; x += spacing) {
@@ -56,6 +58,21 @@ export function InteractiveGrid({ className }: { className?: string }) {
 
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
+      
+      const time = Date.now() * 0.001;
+      
+      const isMobile = window.innerWidth < 768;
+      
+      if (isMobile) {
+        // Always lock to middle-right of the screen (viewport), not the section
+        const rect = container.getBoundingClientRect();
+        mouse.x = width * 0.85;
+        mouse.y = (window.innerHeight / 2) - rect.top;
+      } else if (mouse.clientX === -1000) {
+        // Subtle ambient movement on desktop if no interaction
+        mouse.x = width / 2 + Math.sin(time * 0.5) * width * 0.3;
+        mouse.y = height / 2 + Math.cos(time * 0.3) * height * 0.3;
+      }
       
       // Smooth mouse interpolation
       mouse.currentX += (mouse.x - mouse.currentX) * 0.15;
@@ -155,7 +172,7 @@ export function InteractiveGrid({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "absolute inset-0 z-0 overflow-hidden pointer-events-auto",
+        "absolute inset-0 z-0 overflow-hidden pointer-events-auto bg-black dark:bg-black",
         className
       )}
     >

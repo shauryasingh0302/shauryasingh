@@ -46,17 +46,17 @@ export function ParticleNetwork() {
       size: number;
 
       constructor() {
-        this.x = Math.random() * canvas!.width;
-        this.y = Math.random() * canvas!.height;
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
         this.vx = (Math.random() - 0.5) * 1.5; // slight drift
         this.vy = (Math.random() - 0.5) * 1.5;
         this.size = Math.random() * 2 + 1;
       }
 
       update() {
-        // Bounce off edges
-        if (this.x < 0 || this.x > canvas!.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas!.height) this.vy *= -1;
+        // Bounce off edges (using CSS pixel dimensions, not physical canvas size)
+        if (this.x < 0 || this.x > window.innerWidth) this.vx *= -1;
+        if (this.y < 0 || this.y > window.innerHeight) this.vy *= -1;
 
         // Mouse interaction (repel)
         const dx = mouse.x - this.x;
@@ -87,11 +87,17 @@ export function ParticleNetwork() {
     }
 
     const init = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.scale(dpr, dpr);
       
       const currentIsMobile = window.innerWidth < 768;
-      const currentParticleCount = currentIsMobile ? 60 : 120;
+      // Decreased particle count as per user request
+      const currentParticleCount = currentIsMobile ? 90 : 150;
+      const currentConnectionDistance = currentIsMobile ? 120 : 200;
       
       particles = [];
       for (let i = 0; i < currentParticleCount; i++) {
@@ -149,6 +155,14 @@ export function ParticleNetwork() {
       updateMousePosition();
     };
 
+    const handleTouch = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouse.clientX = e.touches[0].clientX;
+        mouse.clientY = e.touches[0].clientY;
+        updateMousePosition();
+      }
+    };
+
     const handleScroll = () => {
       updateMousePosition();
     };
@@ -179,6 +193,9 @@ export function ParticleNetwork() {
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchstart", handleTouch, { passive: true });
+    window.addEventListener("touchmove", handleTouch, { passive: true });
+    window.addEventListener("touchend", handleMouseLeave);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
@@ -186,6 +203,9 @@ export function ParticleNetwork() {
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchstart", handleTouch);
+      window.removeEventListener("touchmove", handleTouch);
+      window.removeEventListener("touchend", handleMouseLeave);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -195,7 +215,7 @@ export function ParticleNetwork() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-0 pointer-events-none"
+      className="absolute inset-0 z-0 w-full h-full pointer-events-none bg-black dark:bg-black"
     />
   );
 }
