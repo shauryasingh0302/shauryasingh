@@ -40,65 +40,75 @@ export function Skills() {
             scrollTrigger: {
               trigger: ".skills-left",
               start: "top 85%",
-              once: true,
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
             },
           }
         );
 
-        // Icon boxes stagger in with rotation
-        gsap.fromTo(
-          ".skills-icon-box",
-          { scale: 0, rotation: -15, opacity: 0 },
-          {
-            scale: 1,
-            rotation: 0,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "back.out(1.7)",
-            scrollTrigger: {
-              trigger: ".skills-icon-grid",
-              start: "top 85%",
-              once: true,
-            },
-          }
-        );
+        // Icon boxes animate individually with rotation
+        const iconBoxes = gsap.utils.toArray(".skills-icon-box");
+        iconBoxes.forEach((box: any) => {
+          gsap.fromTo(
+            box,
+            { y: 60, rotateX: -90, opacity: 0 },
+            {
+              y: 0,
+              rotateX: 0,
+              opacity: 1,
+              duration: 0.35,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: box,
+                start: "top 98%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        });
 
-        // Skill columns stagger in
-        gsap.fromTo(
-          ".skill-column",
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ".skills-right",
-              start: "top 85%",
-              once: true,
-            },
-          }
-        );
+        // Skill columns animate individually
+        const skillCols = gsap.utils.toArray(".skill-column");
+        skillCols.forEach((col: any) => {
+          gsap.fromTo(
+            col,
+            { y: 50, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.6,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: col,
+                start: "top 85%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        });
 
-        // Individual skill items slide in from right
-        gsap.fromTo(
-          ".skill-item",
-          { x: 20, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.35,
-            stagger: 0.04,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".skills-right",
-              start: "top 80%",
-              once: true,
-            },
-          }
-        );
+        // Individual skill items slide in from right individually
+        const skillItems = gsap.utils.toArray(".skill-item");
+        skillItems.forEach((item: any) => {
+          gsap.fromTo(
+            item,
+            { x: 20, opacity: 0 },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 0.35,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 95%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        });
       }, el);
     }
 

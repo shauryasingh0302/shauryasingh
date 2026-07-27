@@ -229,7 +229,7 @@ export function Hero() {
     if (lowerCmd === "help") {
       setTerminalHistory((prev) => {
         const newHist = [...prev];
-        newHist[newHist.length - 1].response = "available: contact, help, clear — or ask Grok AI a question!";
+        newHist[newHist.length - 1].response = "available: contact, help, clear — or ask a question!";
         return newHist;
       });
       setIsProcessing(false);

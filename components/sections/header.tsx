@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Container } from "@/components/zippystarter/container";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 interface HeaderProps {
   setSearchOpen: (open: boolean) => void;
@@ -43,73 +44,92 @@ export function Header({ setSearchOpen }: HeaderProps) {
         Shaurya<span className="text-primary">_</span>Singh
       </div>
       <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground ">
-        <button
-          onClick={() => scrollTo("#projects")}
-          className="hover:text-primary transition-colors"
-        >
-          Projects
-        </button>
-        <button
-          onClick={() => scrollTo("#skills")}
-          className="hover:text-primary transition-colors"
-        >
-          Skills
-        </button>
-        <button
-          onClick={() => scrollTo("#blog")}
-          className="hover:text-primary transition-colors"
-        >
-          Logs
-        </button>
-        <button
-          onClick={() => scrollTo("#contact")}
-          className="hover:text-primary transition-colors"
-        >
-          Contact
-        </button>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => scrollTo("#projects")}
+            className="hover:text-primary transition-colors block py-2"
+          >
+            Projects
+          </button>
+        </MagneticButton>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => scrollTo("#skills")}
+            className="hover:text-primary transition-colors block py-2"
+          >
+            Skills
+          </button>
+        </MagneticButton>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => scrollTo("#blog")}
+            className="hover:text-primary transition-colors block py-2"
+          >
+            Logs
+          </button>
+        </MagneticButton>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => scrollTo("#contact")}
+            className="hover:text-primary transition-colors block py-2"
+          >
+            Contact
+          </button>
+        </MagneticButton>
       </nav>
       <div className="flex items-center gap-1 md:gap-3">
-        <button
-          onClick={() => setSearchOpen(true)}
-          className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-muted/40 text-muted-foreground hover:text-foreground hover:bg-muted/70 hover:border-border/80 transition-all text-sm"
-          aria-label="Search"
-        >
-          <Search className="size-3.5" />
-          <span className="font-sans">Search</span>
-          <kbd className="inline-flex items-center gap-0.5 text-[10px] font-mono border border-border/70 rounded px-1 py-0.5 bg-background/50">
-            <span>⌘</span>K
-          </kbd>
-        </button>
-        <button
-          onClick={() => setSearchOpen(true)}
-          className="md:hidden size-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
-          aria-label="Search"
-        >
-          <Search className="size-4" />
-        </button>
-        <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="relative flex items-center justify-center size-9 text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Toggle theme"
-        >
-          <Sun className="size-[18px] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute size-[18px] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        </button>
-        <a
-          href="/resume/shaurya_resume_04.pdf"
-          download
-          className="inline-flex items-center px-3 sm:px-4 py-1.5 rounded-lg font-mono text-xs tracking-wider uppercase text-foreground dark:text-white transition-colors bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/15 hover:bg-foreground/10 dark:hover:bg-white/10"
-        >
-          <span className="hidden sm:inline">shaurya_resume_04.pdf</span>
-          <span className="sm:hidden">RESUME</span>
-        </a>
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden relative flex items-center justify-center size-9 text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-muted/40 text-muted-foreground hover:text-foreground hover:bg-muted/70 hover:border-border/80 transition-all text-sm"
+            aria-label="Search"
+          >
+            <Search className="size-3.5" />
+            <span className="font-sans">Search</span>
+            <kbd className="inline-flex items-center gap-0.5 text-[10px] font-mono border border-border/70 rounded px-1 py-0.5 bg-background/50">
+              <span>⌘</span>K
+            </kbd>
+          </button>
+        </MagneticButton>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="md:hidden size-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
+            aria-label="Search"
+          >
+            <Search className="size-4" />
+          </button>
+        </MagneticButton>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="relative flex items-center justify-center size-9 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Toggle theme"
+          >
+            <Sun className="size-[18px] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute size-[18px] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </button>
+        </MagneticButton>
+        <MagneticButton strength={0.2}>
+          <a
+            href="/resume/shaurya_resume_04.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-3 sm:px-4 py-1.5 rounded-lg font-mono text-xs tracking-wider uppercase text-foreground dark:text-white transition-colors bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/15 hover:bg-foreground/10 dark:hover:bg-white/10"
+          >
+            <span className="hidden sm:inline">shaurya_resume_04.pdf</span>
+            <span className="sm:hidden">RESUME</span>
+          </a>
+        </MagneticButton>
+        <MagneticButton strength={0.2}>
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden relative flex items-center justify-center size-9 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </MagneticButton>
       </div>
 
       {/* Mobile Menu Dropdown */}

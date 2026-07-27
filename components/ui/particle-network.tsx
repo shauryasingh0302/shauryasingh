@@ -18,7 +18,7 @@ export function ParticleNetwork() {
     let animationFrameId: number;
     
     // Config
-    const particleCount = 60;
+    const particleCount = 120;
     const connectionDistance = 150;
     const mouseRadius = 200;
     const isDark = resolvedTheme === "dark";

@@ -38,45 +38,52 @@ export function Logs() {
             scrollTrigger: {
               trigger: ".logs-title",
               start: "top 85%",
-              once: true,
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
             },
           }
         );
 
-        // Log entries slide in from left with stagger
-        gsap.fromTo(
-          ".log-entry",
-          { x: -60, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.12,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ".logs-grid",
-              start: "top 85%",
-              once: true,
-            },
-          }
-        );
+        // Log entries slide in from left individually
+        const logEntries = gsap.utils.toArray(".log-entry");
+        logEntries.forEach((entry: any) => {
+          gsap.fromTo(
+            entry,
+            { x: -60, opacity: 0 },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 0.6,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: entry,
+                start: "top 85%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        });
 
-        // Separator lines grow from left on scroll
-        gsap.fromTo(
-          ".log-separator",
-          { scaleX: 0, transformOrigin: "left" },
-          {
-            scaleX: 1,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".logs-grid",
-              start: "top 80%",
-              once: true,
-            },
-          }
-        );
+        // Separator lines grow from left individually
+        const logSeparators = gsap.utils.toArray(".log-separator");
+        logSeparators.forEach((sep: any) => {
+          gsap.fromTo(
+            sep,
+            { scaleX: 0, transformOrigin: "left" },
+            {
+              scaleX: 1,
+              duration: 0.5,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: sep,
+                start: "top 85%", // Adjusted slightly from 80% to sync with entry
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        });
       }, el);
     }
 

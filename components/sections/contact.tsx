@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Container } from "@/components/zippystarter/container";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
 import { BackgroundMarquee } from "@/components/ui/background-marquee";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export function Contact() {
   const [toast, setToast] = useState<{ visible: boolean; message: string }>({
@@ -176,9 +177,11 @@ export function Contact() {
             />
           </div>
           <div className="contact-submit" style={{ opacity: 0 }}>
-            <Button type="submit" className="w-full" size="lg">
-              SEND TRANSMISSION
-            </Button>
+            <MagneticButton className="w-full" strength={0.1}>
+              <Button type="submit" className="w-full" size="lg">
+                SEND TRANSMISSION
+              </Button>
+            </MagneticButton>
           </div>
         </form>
         {/* Toast */}

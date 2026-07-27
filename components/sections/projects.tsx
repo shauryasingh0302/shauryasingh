@@ -65,31 +65,33 @@ export function Projects() {
           "-=0.3"
         );
 
-        // Project cards stagger in with scale + rotation
-        gsap.fromTo(
-          ".project-card",
-          {
-            y: 80,
-            opacity: 0,
-            scale: 0.92,
-            rotateX: 8,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotateX: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ".projects-grid",
-              start: "top 85%",
-              end: "bottom 15%",
-              toggleActions: "play reverse play reverse",
+        // Project cards animate in element-wise with scale + rotation
+        const projectCards = gsap.utils.toArray(".project-card");
+        projectCards.forEach((card: any) => {
+          gsap.fromTo(
+            card,
+            {
+              y: 80,
+              opacity: 0,
+              scale: 0.92,
+              rotateX: 8,
             },
-          }
-        );
+            {
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              rotateX: 0,
+              duration: 0.8,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                end: "bottom 15%",
+                toggleActions: "play reverse play reverse",
+              },
+            }
+          );
+        });
 
         // Card image parallax on scroll
         const cards = el.querySelectorAll(".project-card");

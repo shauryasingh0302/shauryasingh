@@ -1,5 +1,6 @@
 import { Container } from "@/components/zippystarter/container";
 import Link from "next/link";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export function Footer() {
   return (
@@ -12,24 +13,30 @@ export function Footer() {
           © 2025 SHAURYA SINGH. ALL RIGHTS RESERVED.
         </div>
         <div className="flex gap-6 text-xs font-mono text-muted-foreground">
-          <Link
-            href="https://github.com/shauryasingh0302"
-            className="hover:text-primary transition-colors"
-          >
-            GITHUB
-          </Link>
-          <Link
-            href="https://linkedin.com/in/shauryasingh0302"
-            className="hover:text-primary transition-colors"
-          >
-            LINKEDIN
-          </Link>
-          <Link
-            href="mailto:shauryasingh0302@icloud.com"
-            className="hover:text-primary transition-colors"
-          >
-            EMAIL
-          </Link>
+          <MagneticButton strength={0.2}>
+            <Link
+              href="https://github.com/shauryasingh0302"
+              className="hover:text-primary transition-colors block py-2"
+            >
+              GITHUB
+            </Link>
+          </MagneticButton>
+          <MagneticButton strength={0.2}>
+            <Link
+              href="https://linkedin.com/in/shauryasingh0302"
+              className="hover:text-primary transition-colors block py-2"
+            >
+              LINKEDIN
+            </Link>
+          </MagneticButton>
+          <MagneticButton strength={0.2}>
+            <Link
+              href="mailto:shauryasingh0302@icloud.com"
+              className="hover:text-primary transition-colors block py-2"
+            >
+              EMAIL
+            </Link>
+          </MagneticButton>
         </div>
       </div>
     </Container>
