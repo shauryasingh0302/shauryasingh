@@ -1,31 +1,55 @@
 import { NextResponse } from 'next/server';
 import { projects, skills, blogPosts } from '@/lib/portfolio-data';
 
-// Create a combined context string from the portfolio data
 const portfolioContext = `
-Shaurya Singh is a Final year Computer Science Engineering student (GPA 7.57/10.0).
-He is a Full-Stack Developer, building AI-integrated products.
-He won the Smart India Hackathon 2025 for 'Navjivan' (an AI-powered smoking cessation platform).
-He works as a Web Developer & Video Editor for Google Developer Groups (GDG) Noida.
+SHAURYA SINGH - TERMINAL PROFILE DATA
+======================================
+Summary: Pre-final year Computer Science Engineering student with hands-on experience in full-stack development, RESTful API design, and scalable backend systems. Proficient in JavaScript, React.js, Next.js, Node.js, MongoDB, and PostgreSQL. National-level hackathon winner with demonstrated ability to ship AI-integrated, production-ready applications. Seeking software engineering internship or entry-level full-stack development roles.
+
+Contact:
+- GitHub: https://github.com/shauryasingh0302
+- LinkedIn: https://linkedin.com/in/shauryasingh0302
+- Email: shauryasingh0302@icloud.com
+- Phone: 9140861921
+
+Education:
+- B.Tech in Computer Science Engineering, ABES Engineering College (2023-2027) | GPA: 7.57/10.0
+- Class 12th, CBSE Board (2022) | 88.4%
+- Class 10th, CBSE Board (2020) | 93%
+
+Experience:
+- Web Developer & Video Editor @ Google Developer Groups (GDG) Noida (2025 - Present)
+  Develop/maintain community website, ship features, edit promotional/recap videos for developer meetups.
+
+Achievements:
+- Smart India Hackathon 2025 Winner (National Level) for 'Navjivan', an AI-powered smoking cessation platform.
 
 Projects:
-${projects.map(p => `- ${p.title}: ${p.description}`).join('\n')}
+1. Navjivan (SIH 2025 Winner) - AI Smoking Cessation & Wellness Platform (React Native, Node.js, Pinecone, Gemini).
+2. ChatPDF - AI-Powered Document Chat Platform (RAG, LangChain, Pinecone, Gemini API, Next.js, Supabase).
+3. Cypress - Real-Time Collaborative Workspace SaaS (WebSockets, Next.js, Drizzle ORM, Clerk).
+4. ExecOS - Autonomous AI Executive Assistant (Vercel AI SDK, Groq, Google APIs, Drizzle ORM).
 
 Skills:
-${skills.map(s => `- ${s.category}: ${s.items.map(i => i.name).join(', ')}`).join('\n')}
-
-Achievements/Experience:
-${blogPosts.map(b => `- ${b.title} (${b.date}): ${b.excerpt}`).join('\n')}
-
-Contact Email: shauryasingh0302@icloud.com
-Github: https://github.com/shauryasingh0302
-LinkedIn: https://linkedin.com/in/shauryasingh0302
+- Languages: Java, JavaScript (ES6+), TypeScript, SQL
+- Backend: Node.js, Express.js, REST APIs, JWT, bcryptjs
+- Databases: MongoDB, PostgreSQL, Prisma, Drizzle, Pinecone
+- Frontend: React.js, Next.js, HTML, CSS, Tailwind CSS
+- AI: Generative AI, LangChain, RAG Pipelines
+- Tools: Git, GitHub, Postman, Supabase, Cloudinary, Clerk
 `;
 
-const systemPrompt = `You are a helpful, concise AI assistant integrated directly into the terminal of Shaurya Singh's portfolio website. 
-You must answer questions about Shaurya based on the following context.
-Keep your answers brief, professional, and formatted in plain text (no markdown rendering, just pure text, as it will be displayed in a fake terminal).
-If asked something outside the context of Shaurya's professional background, politely decline or pivot back to his skills.
+const systemPrompt = `You are a strict CLI (Command Line Interface) terminal connected to Shaurya Singh's mainframe. 
+You MUST respond exactly like a Unix terminal, shell environment, or database interface. 
+CRITICAL RULES:
+1. NEVER use conversational AI fillers like "I am an AI", "Here is the information", "I'd be happy to help", or "Let me know".
+2. NEVER use markdown formatting like bold (**), italics, or markdown links. 
+3. ALWAYS return raw plaintext, simulating a terminal screen.
+4. Format output as raw shell output, pseudo-JSON, or plain tabular data. Prefix output lines with ">" or "[SYSTEM]" if appropriate.
+
+If the user asks a question about Shaurya Singh, query the CONTEXT below and return the data as raw terminal output.
+If the user asks something outside of the provided context, DO NOT answer politely. Instead, return a strict terminal error such as:
+"bash: command not found" or "ERR_UNAUTHORIZED: Access denied to external knowledge base." or "Error: 404 Data not found in Shaurya_DB."
 
 CONTEXT:
 ${portfolioContext}

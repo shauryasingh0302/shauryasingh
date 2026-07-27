@@ -25,7 +25,7 @@ export function InteractiveFlow({ className }: { className?: string }) {
     const particleColor = isDark ? "rgba(167, 243, 208, 0.4)" : "rgba(5, 150, 105, 0.4)";
     
     let particles: Particle[] = [];
-    const mouse = { x: -1000, y: -1000 };
+    const mouse = { x: -1000, y: -1000, clientX: -1000, clientY: -1000 };
 
     class Particle {
       x: number;
@@ -53,7 +53,7 @@ export function InteractiveFlow({ className }: { className?: string }) {
         const dy = mouse.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 200) {
+        if (distance < 200 && mouse.x !== -1000) {
           const force = (200 - distance) / 200;
           // Perpendicular force for swirling
           this.vx -= (dy / distance) * force * 0.5;
@@ -90,7 +90,7 @@ export function InteractiveFlow({ className }: { className?: string }) {
       canvas.height = height;
 
       particles = [];
-      const numParticles = Math.floor((width * height) / 10000); // density
+      const numParticles = Math.floor((width * height) / 5000); // Doubled density
       for (let i = 0; i < numParticles; i++) {
         particles.push(new Particle(Math.random() * width, Math.random() * height));
       }
@@ -105,15 +105,28 @@ export function InteractiveFlow({ className }: { className?: string }) {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const updateMousePosition = () => {
+      if (mouse.clientX === -1000) return;
       const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
+      mouse.x = mouse.clientX - rect.left;
+      mouse.y = mouse.clientY - rect.top;
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouse.clientX = e.clientX;
+      mouse.clientY = e.clientY;
+      updateMousePosition();
+    };
+
+    const handleScroll = () => {
+      updateMousePosition();
     };
     
     const handleMouseLeave = () => {
       mouse.x = -1000;
       mouse.y = -1000;
+      mouse.clientX = -1000;
+      mouse.clientY = -1000;
     };
 
     const handleResize = () => {
@@ -139,12 +152,14 @@ export function InteractiveFlow({ className }: { className?: string }) {
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };

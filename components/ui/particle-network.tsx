@@ -32,6 +32,8 @@ export function ParticleNetwork() {
     let mouse = {
       x: -1000,
       y: -1000,
+      clientX: -1000,
+      clientY: -1000,
     };
 
     class Particle {
@@ -59,7 +61,7 @@ export function ParticleNetwork() {
         const dy = mouse.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < mouseRadius) {
+        if (distance < mouseRadius && mouse.x !== -1000) {
           const forceDirectionX = dx / distance;
           const forceDirectionY = dy / distance;
           const force = (mouseRadius - distance) / mouseRadius;
@@ -125,14 +127,28 @@ export function ParticleNetwork() {
       init();
     };
 
+    const updateMousePosition = () => {
+      if (mouse.clientX === -1000) return;
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = mouse.clientX - rect.left;
+      mouse.y = mouse.clientY - rect.top;
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      mouse.clientX = e.clientX;
+      mouse.clientY = e.clientY;
+      updateMousePosition();
+    };
+
+    const handleScroll = () => {
+      updateMousePosition();
     };
     
     const handleMouseLeave = () => {
       mouse.x = -1000;
       mouse.y = -1000;
+      mouse.clientX = -1000;
+      mouse.clientY = -1000;
     };
 
     const observer = new IntersectionObserver(
@@ -154,12 +170,14 @@ export function ParticleNetwork() {
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };

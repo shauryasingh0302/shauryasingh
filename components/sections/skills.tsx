@@ -110,16 +110,14 @@ export function Skills() {
   }, [gsapReady]);
 
   return (
-    <Container
+    <section
       id="skills"
-      component="section"
-      wrapperClassName="py-24 bg-secondary/20 border-t border-border relative overflow-hidden bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px]"
-      className="mx-auto max-w-7xl flex-1 relative z-10"
+      className="py-24 bg-secondary/20 border-t border-border relative overflow-hidden flex flex-col"
     >
-      <AnimatedGrid />
       <InteractiveFlow />
-      <div ref={sectionRef} className="grid md:grid-cols-12 gap-12 relative z-10 pointer-events-none [&>*]:pointer-events-auto">
-        <div className="skills-left md:col-span-4" style={{ opacity: 0 }}>
+      <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10">
+        <div ref={sectionRef} className="grid md:grid-cols-12 gap-12 relative z-10 pointer-events-none [&>*]:pointer-events-auto">
+          <div className="skills-left md:col-span-4" style={{ opacity: 0 }}>
           <h2 className="text-4xl font-display tracking-tighter mb-6">
             TECH_STACK
           </h2>
@@ -194,7 +192,8 @@ export function Skills() {
             </div>
           ))}
         </div>
+        </div>
       </div>
-    </Container>
+    </section>
   );
 }

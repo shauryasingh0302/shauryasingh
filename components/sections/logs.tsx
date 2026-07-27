@@ -88,46 +88,46 @@ export function Logs() {
   }, [gsapReady]);
 
   return (
-    <Container
+    <section
       id="blog"
-      component="section"
-      wrapperClassName="py-24 border-t border-border relative overflow-hidden"
-      className="mx-auto max-w-7xl relative"
+      className="py-24 border-t border-border relative overflow-hidden flex flex-col"
     >
       <InteractiveAurora />
-      <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
-        <h2
-          className="logs-title text-4xl font-display mb-12 uppercase"
-          style={{ opacity: 0 }}
-        >
-          Achievements & Experience
-        </h2>
+      <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10">
+        <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
+          <h2
+            className="logs-title text-4xl font-display mb-12 uppercase"
+            style={{ opacity: 0 }}
+          >
+            Achievements & Experience
+          </h2>
 
-        <div className="logs-grid grid gap-8">
-          {blogPosts.map((post, index) => (
-            <div
-              key={index}
-              className="log-entry"
-              style={{ opacity: 0 }}
-            >
-              <Link href="#" className="group">
-                <div className="grid gap-4 md:grid-cols-[1fr_auto] items-baseline justify-between mb-2">
-                  <h3 className="text-2xl font-display group-hover:text-primary transition-colors text-balance">
-                    {post.title}
-                  </h3>
-                  <span className="font-mono text-xs text-muted-foreground whitespace-nowrap">
-                    {post.date}{" // "}{post.readTime}
-                  </span>
-                </div>
-                <p className="text-muted-foreground mb-4 max-w-2xl">
-                  {post.excerpt}
-                </p>
-                <div className="log-separator h-[1px] w-full bg-border group-hover:bg-primary/50 transition-colors" style={{ transform: "scaleX(0)" }}></div>
-              </Link>
-            </div>
-          ))}
+          <div className="logs-grid grid gap-8">
+            {blogPosts.map((post, index) => (
+              <div
+                key={index}
+                className="log-entry"
+                style={{ opacity: 0 }}
+              >
+                <Link href="#" className="group">
+                  <div className="grid gap-4 md:grid-cols-[1fr_auto] items-baseline justify-between mb-2">
+                    <h3 className="text-2xl font-display group-hover:text-primary transition-colors text-balance">
+                      {post.title}
+                    </h3>
+                    <span className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                      {post.date}{" // "}{post.readTime}
+                    </span>
+                  </div>
+                  <p className="text-muted-foreground mb-4 max-w-2xl">
+                    {post.excerpt}
+                  </p>
+                  <div className="log-separator h-[1px] w-full bg-border group-hover:bg-primary/50 transition-colors" style={{ transform: "scaleX(0)" }}></div>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </Container>
+    </section>
   );
 }

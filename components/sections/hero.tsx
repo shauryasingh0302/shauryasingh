@@ -352,7 +352,13 @@ export function Hero() {
               animation: terminalCursor 1s step-end infinite;
             }
           `}</style>
-          <div className="p-6 h-[calc(100%-49px)] overflow-y-auto font-mono text-[13px] leading-relaxed">
+          <div 
+            className="p-6 h-[calc(100%-49px)] overflow-y-auto overscroll-contain font-mono text-[13px] leading-relaxed"
+            onWheel={(e) => {
+              // Stop propagation to prevent any potential GSAP/custom scroll listeners on the page from picking this up
+              e.stopPropagation();
+            }}
+          >
             <div className="term-line mb-4" style={{ animationDelay: "0.1s" }}>
               <span className="text-primary">shaurya@dev</span>
               <span className="text-muted-foreground">:~$</span>{" "}

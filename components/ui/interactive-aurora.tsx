@@ -24,7 +24,7 @@ export function InteractiveAurora({ className }: { className?: string }) {
 
     const isDark = resolvedTheme === "dark";
     
-    const mouse = { x: -1000, y: -1000, currentX: -1000, currentY: -1000 };
+    const mouse = { x: -1000, y: -1000, currentX: -1000, currentY: -1000, clientX: -1000, clientY: -1000 };
 
     const init = () => {
       const rect = container.getBoundingClientRect();
@@ -90,15 +90,28 @@ export function InteractiveAurora({ className }: { className?: string }) {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const updateMousePosition = () => {
+      if (mouse.clientX === -1000) return;
       const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
+      mouse.x = mouse.clientX - rect.left;
+      mouse.y = mouse.clientY - rect.top;
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouse.clientX = e.clientX;
+      mouse.clientY = e.clientY;
+      updateMousePosition();
+    };
+
+    const handleScroll = () => {
+      updateMousePosition();
     };
     
     const handleMouseLeave = () => {
       mouse.x = -1000;
       mouse.y = -1000;
+      mouse.clientX = -1000;
+      mouse.clientY = -1000;
     };
 
     const handleResize = () => {
@@ -124,12 +137,14 @@ export function InteractiveAurora({ className }: { className?: string }) {
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
