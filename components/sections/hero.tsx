@@ -296,7 +296,7 @@ export function Hero() {
 
       <div ref={heroContentRef} className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
-          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs font-mono" style={{ opacity: 0 }}>
+          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs font-mono mt-5 md:mt-0" style={{ opacity: 0 }}>
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
