@@ -108,44 +108,12 @@ export function Contact() {
 
         <form
           className="contact-form grid gap-6 bg-card p-8 border border-border shadow-2xl relative z-20"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const form = e.currentTarget;
-            const data = new FormData(form);
-            const json: Record<string, string> = {};
-            data.forEach((value, key) => { json[key] = value.toString(); });
-            
-            // Add Formsubmit config
-            json._captcha = "false";
-            json._template = "table";
-
-            try {
-              const res = await fetch("https://formsubmit.co/ajax/shauryasingh0302@icloud.com", {
-                method: "POST",
-                headers: { 
-                  "Content-Type": "application/json",
-                  "Accept": "application/json"
-                },
-                body: JSON.stringify(json),
-              });
-              
-              const result = await res.json();
-              
-              if (result.success === "true" || result.success === true) {
-                form.reset();
-                setToast({ visible: true, message: "Your message has been communicated." });
-              } else {
-                console.error("Formsubmit error:", result);
-                setToast({ visible: true, message: "Failed to send. Please try again." });
-              }
-            } catch (err) {
-              console.error("Fetch error:", err);
-              setToast({ visible: true, message: "Failed to send. Please try again." });
-            } finally {
-              setTimeout(() => setToast({ visible: false, message: "" }), 4000);
-            }
-          }}
+          action="https://formsubmit.co/shauryasingh0302@icloud.com"
+          method="POST"
         >
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" value="https://shauryasingh.onrender.com" />
           <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
           <div className="contact-field grid md:grid-cols-2 gap-6" style={{ opacity: 0 }}>
             <div className="space-y-2">
