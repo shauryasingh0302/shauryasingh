@@ -18,8 +18,10 @@ export function ParticleNetwork() {
     let animationFrameId: number;
     
     // Config
-    const particleCount = 120;
-    const connectionDistance = 150;
+    // Use fewer particles on mobile devices to save performance and reduce visual clutter
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 60 : 120;
+    const connectionDistance = isMobile ? 100 : 150;
     const mouseRadius = 200;
     const isDark = resolvedTheme === "dark";
     
@@ -87,14 +89,21 @@ export function ParticleNetwork() {
     const init = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      
+      const currentIsMobile = window.innerWidth < 768;
+      const currentParticleCount = currentIsMobile ? 60 : 120;
+      
       particles = [];
-      for (let i = 0; i < particleCount; i++) {
+      for (let i = 0; i < currentParticleCount; i++) {
         particles.push(new Particle());
       }
     };
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const currentIsMobile = window.innerWidth < 768;
+      const currentConnectionDistance = currentIsMobile ? 100 : 150;
 
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
@@ -106,8 +115,8 @@ export function ParticleNetwork() {
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < connectionDistance) {
-            const opacity = 1 - distance / connectionDistance;
+          if (distance < currentConnectionDistance) {
+            const opacity = 1 - distance / currentConnectionDistance;
             ctx.beginPath();
             ctx.strokeStyle = `${lineColor}${opacity * 0.4})`;
             ctx.lineWidth = 1;
