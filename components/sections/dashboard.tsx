@@ -70,48 +70,48 @@ export function Dashboard() {
       if (!el) return;
 
       ctx = gsap.context(() => {
-        // Title slides up with clip-path
-        gsap.fromTo(
-          ".dashboard-title",
-          { y: 50, opacity: 0, clipPath: "inset(100% 0% 0% 0%)" },
-          {
-            y: 0,
-            opacity: 1,
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.8,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: ".dashboard-title",
-              start: "top 85%",
-            },
-          }
-        );
-
-        // Cards sleek slide-up fade
-        gsap.fromTo(
-          ".dashboard-card",
-          { y: 40, opacity: 0, clipPath: "inset(10% 0% 0% 0%)" },
-          {
-            y: 0,
-            opacity: 1,
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power4.out",
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            end: "bottom 15%",
+            toggleActions: "restart reverse restart reverse", // Bulletproof re-rendering from any direction
           },
-        );
+        });
 
-        // Inner card content staggers in softly
-        gsap.fromTo(
+        // Title sleek entrance
+        tl.fromTo(
+          ".dashboard-title",
+          { y: 30, opacity: 0, clipPath: "inset(100% 0% 0% 0%)" },
+          { y: 0, opacity: 1, clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: "power4.out" }
+        )
+        // Cards stagger in with a subtle premium 3D tilt
+        .fromTo(
+          ".dashboard-card",
+          { y: 60, opacity: 0, rotationX: 15, scale: 0.95 },
+          {
+            y: 0,
+            opacity: 1,
+            rotationX: 0,
+            scale: 1,
+            duration: 1,
+            stagger: 0.15,
+            ease: "expo.out",
+          },
+          "-=0.6"
+        )
+        // Inner card content softly fades up
+        .fromTo(
           ".dashboard-content",
           { y: 15, opacity: 0 },
           {
             y: 0,
             opacity: 1,
             duration: 0.6,
-            stagger: 0.1,
+            stagger: 0.05,
             ease: "power3.out",
           },
+          "-=0.8"
         );
       }, el);
     }
