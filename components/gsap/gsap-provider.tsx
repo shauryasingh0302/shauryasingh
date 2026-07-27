@@ -13,10 +13,15 @@ export function GsapProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function init() {
-      const gsap = (await import("gsap")).default;
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsap.registerPlugin(ScrollTrigger);
-      setReady(true);
+      try {
+        const gsap = (await import("gsap")).default;
+        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+        gsap.registerPlugin(ScrollTrigger);
+        setReady(true);
+      } catch (err: any) {
+        console.error("GSAP Initialization Error:", err);
+        alert("GSAP Failed to load: " + err.message);
+      }
     }
     init();
   }, []);

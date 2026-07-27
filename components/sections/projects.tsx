@@ -16,6 +16,7 @@ import { ProjectImage } from "@/components/project-image";
 import { projects } from "@/lib/portfolio-data";
 import Link from "next/link";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
+import { InteractiveFlow } from "@/components/ui/interactive-flow";
 
 export function Projects() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -46,23 +47,13 @@ export function Projects() {
 
         tl.fromTo(
           ".projects-title-line",
-          { y: 100, opacity: 0, clipPath: "inset(100% 0% 0% 0%)" },
-          {
-            y: 0,
-            opacity: 1,
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.9,
-            stagger: 0.12,
-            ease: "power4.out",
-          }
-        );
-
-        // Accent line grows
+          { y: 60, opacity: 0, rotateX: -20 },
+          { y: 0, opacity: 1, rotateX: 0, duration: 0.8, stagger: 0.1, ease: "power4.out" }
+        );        // Accent line grows
         tl.fromTo(
           ".projects-accent-line",
           { scaleX: 0, transformOrigin: "left" },
-          { scaleX: 1, duration: 0.6, ease: "power2.out" },
-          "-=0.5"
+          { scaleX: 1, duration: 0.6, ease: "power2.out" }
         );
 
         // Description fades in
@@ -129,15 +120,16 @@ export function Projects() {
     <Container
       id="projects"
       component="section"
-      wrapperClassName="py-24 border-t border-border"
-      className="mx-auto max-w-7xl flex-1"
+      wrapperClassName="py-24 border-t border-border relative overflow-hidden"
+      className="mx-auto max-w-7xl flex-1 relative z-10"
     >
-      <div ref={sectionRef}>
+      <InteractiveFlow />
+      <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
         <div className="projects-header grid justify-between items-end mb-16 gap-4">
           <div>
-            <h2 className="text-4xl md:text-6xl font-display tracking-tighter mb-4">
-              <span className="projects-title-line block" style={{ opacity: 0 }}>SELECTED</span>
-              <span className="projects-title-line block" style={{ opacity: 0 }}>WORKS</span>
+            <h2 className="text-4xl md:text-6xl font-display tracking-tighter mb-4" style={{ perspective: "400px" }}>
+              <span className="projects-title-line block">SELECTED</span>
+              <span className="projects-title-line block text-muted-foreground">WORKS</span>
             </h2>
             <div className="projects-accent-line h-1 w-24 bg-primary" style={{ transform: "scaleX(0)" }}></div>
           </div>

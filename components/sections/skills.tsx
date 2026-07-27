@@ -5,6 +5,8 @@ import { Code2, Database, Cpu, Terminal } from "lucide-react";
 import { Container } from "@/components/zippystarter/container";
 import { skills } from "@/lib/portfolio-data";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
+import { AnimatedGrid } from "@/components/ui/animated-grid";
+import { InteractiveSkillBox } from "@/components/ui/interactive-skill-box";
 
 export function Skills() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -109,10 +111,11 @@ export function Skills() {
     <Container
       id="skills"
       component="section"
-      wrapperClassName="py-24 bg-secondary/20 border-t border-border"
-      className="mx-auto max-w-7xl flex-1"
+      wrapperClassName="py-24 bg-secondary/20 border-t border-border relative overflow-hidden"
+      className="mx-auto max-w-7xl flex-1 relative z-10"
     >
-      <div ref={sectionRef} className="grid md:grid-cols-12 gap-12">
+      <AnimatedGrid />
+      <div ref={sectionRef} className="grid md:grid-cols-12 gap-12 relative z-10">
         <div className="skills-left md:col-span-4" style={{ opacity: 0 }}>
           <h2 className="text-4xl font-display tracking-tighter mb-6">
             TECH_STACK
@@ -122,22 +125,22 @@ export function Skills() {
             Always learning, always evolving.
           </p>
           <div className="skills-icon-grid grid grid-cols-2 gap-4">
-            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
-              <Code2 className="h-8 w-8 mb-2 text-primary" />
+            <InteractiveSkillBox className="skills-icon-box hover:border-primary/50 transition-colors" style={{ opacity: 0 }}>
+              <Code2 className="h-8 w-8 mb-2 text-primary group-hover:scale-110 transition-transform" />
               <span className="font-mono text-xs">CLEAN_CODE</span>
-            </div>
-            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
-              <Database className="h-8 w-8 mb-2 text-primary" />
+            </InteractiveSkillBox>
+            <InteractiveSkillBox className="skills-icon-box hover:border-primary/50 transition-colors" style={{ opacity: 0 }}>
+              <Database className="h-8 w-8 mb-2 text-primary group-hover:scale-110 transition-transform" />
               <span className="font-mono text-xs">SCALABLE_DB</span>
-            </div>
-            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
-              <Cpu className="h-8 w-8 mb-2 text-primary" />
+            </InteractiveSkillBox>
+            <InteractiveSkillBox className="skills-icon-box hover:border-primary/50 transition-colors" style={{ opacity: 0 }}>
+              <Cpu className="h-8 w-8 mb-2 text-primary group-hover:scale-110 transition-transform" />
               <span className="font-mono text-xs">GEN_AI</span>
-            </div>
-            <div className="skills-icon-box p-4 border border-border bg-background flex flex-col items-center justify-center aspect-square hover:border-primary transition-colors" style={{ opacity: 0 }}>
-              <Terminal className="h-8 w-8 mb-2 text-primary" />
+            </InteractiveSkillBox>
+            <InteractiveSkillBox className="skills-icon-box hover:border-primary/50 transition-colors" style={{ opacity: 0 }}>
+              <Terminal className="h-8 w-8 mb-2 text-primary group-hover:scale-110 transition-transform" />
               <span className="font-mono text-xs">RAG_PIPELINES</span>
-            </div>
+            </InteractiveSkillBox>
           </div>
         </div>
 

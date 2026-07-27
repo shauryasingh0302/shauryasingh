@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Container } from "@/components/zippystarter/container";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
+import { InteractiveGrid } from "@/components/ui/interactive-grid";
 
 export function Contact() {
   const [toast, setToast] = useState<{ visible: boolean; message: string }>({
@@ -92,8 +93,9 @@ export function Contact() {
   }, [gsapReady]);
 
   return (
-    <Container id="contact" className="py-24 bg-card border-t border-border">
-      <div ref={sectionRef} className="max-w-2xl justify-self-center">
+    <Container id="contact" className="py-24 bg-card border-t border-border relative overflow-hidden">
+      <InteractiveGrid />
+      <div ref={sectionRef} className="max-w-2xl justify-self-center relative z-10 pointer-events-none [&>*]:pointer-events-auto">
         <div className="contact-header text-center mb-12" style={{ opacity: 0 }}>
           <h2 className="text-4xl font-display mb-4">INITIATE_CONTACT</h2>
           <p className="text-muted-foreground">
@@ -103,7 +105,7 @@ export function Contact() {
         </div>
 
         <form
-          className="contact-form grid gap-6"
+          className="contact-form grid gap-6 bg-card/90 backdrop-blur-sm p-8 border border-border shadow-2xl relative z-20"
           onSubmit={async (e) => {
             e.preventDefault();
             const form = e.currentTarget;

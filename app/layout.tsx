@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LenisProvider } from "@/components/providers/lenis-provider";
 import { GsapWrapper } from "@/components/gsap/gsap-wrapper";
+import { GrainOverlay } from "@/components/ui/grain-overlay";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LenisProvider>
             <GsapWrapper>
+              <GrainOverlay />
               {children}
             </GsapWrapper>
           </LenisProvider>

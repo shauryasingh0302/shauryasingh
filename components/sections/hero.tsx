@@ -8,6 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CONTACT_EMAIL } from "@/lib/portfolio-data";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
+import { ParticleNetwork } from "@/components/ui/particle-network";
 
 function getTerminalResponse(rawCommand: string) {
   const cmd = rawCommand.trim().toLowerCase();
@@ -160,6 +161,7 @@ export function Hero() {
           <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/hero-bg.jpg')] before:absolute before:inset-0 before:bg-primary before:mix-blend-color-dodge dark:before:mix-blend-color" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
+        <ParticleNetwork />
       </div>
 
       <div ref={heroContentRef} className="relative z-10 grid md:grid-cols-2 gap-12 items-center">

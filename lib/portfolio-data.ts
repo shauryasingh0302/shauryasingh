@@ -61,7 +61,7 @@ export const projects: Project[] = [
     description:
       "Autonomous AI executive assistant that reads unread emails on a schedule, understands intent via an LLM, and acts on the user's behalf — drafting replies, extracting tasks, and creating calendar events.",
     tags: ["Vercel AI SDK", "Groq", "Drizzle ORM", "Neon Postgres"],
-    image: "/project-placeholder-4.jpg",
+    image: "/project-placeholder-3.jpg",
     link: "#",
     repo: "#",
   },

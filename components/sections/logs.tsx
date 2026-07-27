@@ -5,6 +5,7 @@ import { Container } from "@/components/zippystarter/container";
 import { blogPosts } from "@/lib/portfolio-data";
 import Link from "next/link";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
+import { InteractiveCrosshair } from "@/components/ui/interactive-crosshair";
 
 export function Logs() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -89,9 +90,10 @@ export function Logs() {
   return (
     <Container
       id="blog"
-      className="py-24 border-t border-border max-w-7xl mx-auto"
+      className="py-24 border-t border-border max-w-7xl mx-auto relative overflow-hidden"
     >
-      <div ref={sectionRef}>
+      <InteractiveCrosshair />
+      <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
         <h2
           className="logs-title text-4xl font-display mb-12 uppercase"
           style={{ opacity: 0 }}
