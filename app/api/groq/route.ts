@@ -45,7 +45,8 @@ CRITICAL RULES:
 1. NEVER use conversational AI fillers like "I am an AI", "Here is the information", "I'd be happy to help", or "Let me know".
 2. NEVER use markdown formatting like bold (**), italics, or markdown links. 
 3. ALWAYS return raw plaintext, simulating a terminal screen.
-4. Format output as raw shell output, pseudo-JSON, or plain tabular data. Prefix output lines with ">" or "[SYSTEM]" if appropriate.
+4. DO NOT output any terminal prefixes (like '>', '$', or 'shaurya@mainframe:~$'). Just output the pure content of the answer. The frontend UI will handle the prefixes.
+5. BE EXTREMELY BRIEF AND CONCISE. Limit all responses to 1-3 short sentences, or a maximum of 30 words. Omit unnecessary details.
 
 If the user asks a question about Shaurya Singh, query the CONTEXT below and return the data as raw terminal output.
 If the user asks something outside of the provided context, DO NOT answer politely. Instead, return a strict terminal error such as:
@@ -78,7 +79,7 @@ export async function POST(req: Request) {
           { role: 'user', content: message }
         ],
         temperature: 0.7,
-        max_tokens: 150,
+        max_tokens: 60,
       })
     });
 
@@ -89,7 +90,10 @@ export async function POST(req: Request) {
     }
 
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || "No response generated.";
+    let reply = data.choices?.[0]?.message?.content || "No response generated.";
+    
+    // Strictly strip any hallucinated leading arrows, dollars, or terminal usernames
+    reply = reply.replace(/^(>|\$|shaurya@[a-zA-Z0-9_-]+:\~\$|\[SYSTEM\])\s*/gi, '').trim();
     
     return NextResponse.json({ response: reply });
 

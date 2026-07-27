@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { Github, Linkedin, Mail, ArrowRight } from "lucide-react";
 import { Container } from "@/components/zippystarter/container";
@@ -10,22 +10,27 @@ import { CONTACT_EMAIL } from "@/lib/portfolio-data";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
 import { ParticleNetwork } from "@/components/ui/particle-network";
 
-function TerminalResponse({ text }: { text: string }) {
+function TerminalResponse({ text, onUpdate, onFinish }: { text: string; onUpdate?: () => void; onFinish?: () => void }) {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
     if (!text || text === "...") {
       setDisplayedText(text);
+      onUpdate?.();
       return;
     }
     let i = 0;
     const interval = setInterval(() => {
       setDisplayedText(text.slice(0, i));
       i++;
-      if (i > text.length) clearInterval(interval);
+      onUpdate?.();
+      if (i > text.length) {
+        clearInterval(interval);
+        onFinish?.();
+      }
     }, 15);
     return () => clearInterval(interval);
-  }, [text]);
+  }, [text, onUpdate, onFinish]);
 
   return <span>{displayedText}</span>;
 }
@@ -34,10 +39,24 @@ export function Hero() {
   const [terminalValue, setTerminalValue] = useState("");
   const [terminalHistory, setTerminalHistory] = useState<{ command: string; response: string }[]>([]);
   const terminalInputRef = useRef<HTMLInputElement>(null);
+  const terminalBodyRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroVisible, setHeroVisible] = useState(true);
   const [terminalReady, setTerminalReady] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  // Stable callback to prevent TerminalResponse re-rendering when typing
+  const scrollToBottom = useCallback(() => {
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+    }
+  }, []);
+
+  const handleTypingFinish = useCallback(() => {
+    setIsTyping(false);
+    scrollToBottom();
+  }, [scrollToBottom]);
   const gsapReady = useGsapReady();
 
   // GSAP entrance animation for hero content
@@ -125,12 +144,42 @@ export function Hero() {
       { threshold: 0.3 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    // Wait for the boot sequence animation to finish before showing the interactive prompt
+    const timer = setTimeout(() => setTerminalReady(true), 6000);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setTerminalReady(true), 4500);
-    return () => clearTimeout(timer);
+    const el = terminalBodyRef.current;
+    if (!el) return;
+
+    // We must use a native event listener with passive: false to explicitly block browser scroll
+    const handleWheel = (e: WheelEvent) => {
+      // If the terminal has no scrollable content, block page scroll entirely
+      if (el.scrollHeight <= el.clientHeight) {
+        e.preventDefault();
+        return;
+      }
+      
+      // If scrolling UP and we are already at the top of the terminal
+      if (e.deltaY < 0 && el.scrollTop <= 0) {
+        e.preventDefault();
+        return;
+      }
+      
+      // If scrolling DOWN and we are already at the bottom of the terminal
+      // We add a tiny 1px buffer to account for sub-pixel rendering rounding errors
+      if (e.deltaY > 0 && Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight - 1) {
+        e.preventDefault();
+        return;
+      }
+      
+      // Otherwise, we are scrolling inside the terminal, so we allow it but stop propagation
+      e.stopPropagation();
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
   }, []);
 
   useEffect(() => {
@@ -164,13 +213,14 @@ export function Hero() {
     setTerminalHistory((prev) => [...prev, { command: cmd, response: "" }]);
     setTerminalValue("");
     setIsProcessing(true);
+    setIsTyping(true);
 
     // Hardcoded instant responses
     const lowerCmd = cmd.toLowerCase();
     if (lowerCmd.includes("email") || lowerCmd.includes("contact")) {
       setTerminalHistory((prev) => {
         const newHist = [...prev];
-        newHist[newHist.length - 1].response = `→ ${CONTACT_EMAIL}`;
+        newHist[newHist.length - 1].response = CONTACT_EMAIL;
         return newHist;
       });
       setIsProcessing(false);
@@ -187,19 +237,24 @@ export function Hero() {
     }
 
     // Ask Grok AI
+    // Auto-scroll when command is submitted
+    setTimeout(() => {
+      if (terminalBodyRef.current) {
+        terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+      }
+    }, 10);
+
     try {
-      // Show loading indicator
-      setTerminalHistory((prev) => {
-        const newHist = [...prev];
-        newHist[newHist.length - 1].response = "...";
-        return newHist;
-      });
+      // Authentic terminal behavior: just hang and wait for the response, no "..." indicator
+      setIsProcessing(true);
 
       const res = await fetch("/api/groq", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: cmd })
+        body: JSON.stringify({ message: cmd }),
       });
+
+      if (!res.ok) throw new Error("API error");
       const data = await res.json();
       
       setTerminalHistory((prev) => {
@@ -323,73 +378,45 @@ export function Hero() {
           </div>
 
           {/* Terminal body */}
-          <style>{`
-            @keyframes terminalLineIn {
-              from { opacity: 0; transform: translateY(4px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes terminalType {
-              from { width: 0; }
-              to { width: var(--chars); }
-            }
-            .term-line {
-              opacity: 0;
-              animation: terminalLineIn 0.4s ease-out forwards;
-            }
-              .term-type {
-              display: inline-block;
-              overflow: hidden;
-              white-space: nowrap;
-              vertical-align: bottom;
-              width: 0;
-              animation: terminalType linear forwards;
-            }
-            @keyframes terminalCursor {
-              0%, 49% { opacity: 1; }
-              50%, 100% { opacity: 0; }
-            }
-            .cursor-block {
-              animation: terminalCursor 1s step-end infinite;
-            }
-          `}</style>
           <div 
-            className="p-6 h-[calc(100%-49px)] overflow-y-auto overscroll-contain font-mono text-[13px] leading-relaxed"
+            ref={terminalBodyRef}
+            className="p-6 h-[calc(100%-49px)] overflow-y-auto overscroll-contain font-mono text-[13px] leading-relaxed select-text [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             onWheel={(e) => {
               // Stop propagation to prevent any potential GSAP/custom scroll listeners on the page from picking this up
               e.stopPropagation();
             }}
           >
-            <div className="term-line mb-4" style={{ animationDelay: "0.1s" }}>
+            <div className="term-line mb-4" style={{ animationDelay: "1.6s" }}>
               <span className="text-primary">shaurya@dev</span>
               <span className="text-muted-foreground">:~$</span>{" "}
               <span
                 className="term-type text-foreground"
-                style={{ "--chars": "6ch", animationDuration: "0.4s", animationDelay: "0.2s" } as React.CSSProperties}
+                style={{ "--chars": "6ch", animationDuration: "0.4s", animationDelay: "2.0s" } as React.CSSProperties}
               >
                 whoami
               </span>
             </div>
             <div
               className="term-line mb-4 pl-0 text-foreground"
-              style={{ animationDelay: "0.9s" }}
+              style={{ animationDelay: "2.4s" }}
             >
               Shaurya Singh —{" "}
               <span className="text-primary">Full-Stack Developer</span>
             </div>
 
-            <div className="term-line mb-4" style={{ animationDelay: "1.3s" }}>
+            <div className="term-line mb-4" style={{ animationDelay: "2.9s" }}>
               <span className="text-primary">shaurya@dev</span>
               <span className="text-muted-foreground">:~$</span>{" "}
               <span
                 className="term-type text-foreground"
-                style={{ "--chars": "12ch", animationDuration: "0.6s", animationDelay: "1.4s" } as React.CSSProperties}
+                style={{ "--chars": "12ch", animationDuration: "0.6s", animationDelay: "2.9s" } as React.CSSProperties}
               >
                 cat now.json
               </span>
             </div>
             <div
               className="term-line mb-4 pl-4 text-muted-foreground"
-              style={{ animationDelay: "2.2s" }}
+              style={{ animationDelay: "3.7s" }}
             >
               <div>{"{"}</div>
               <div>
@@ -409,43 +436,49 @@ export function Hero() {
               <div>{"}"}</div>
             </div>
 
-            <div className="term-line mb-4" style={{ animationDelay: "2.7s" }}>
+            <div className="term-line mb-4" style={{ animationDelay: "4.2s" }}>
               <span className="text-primary">shaurya@dev</span>
               <span className="text-muted-foreground">:~$</span>{" "}
               <span
                 className="term-type text-foreground"
-                style={{ "--chars": "12ch", animationDuration: "0.6s", animationDelay: "2.8s" } as React.CSSProperties}
+                style={{ "--chars": "12ch", animationDuration: "0.6s", animationDelay: "4.3s" } as React.CSSProperties}
               >
                 ls projects/
               </span>
             </div>
             <div
               className="term-line mb-4 pl-0 text-primary"
-              style={{ animationDelay: "3.5s" }}
+              style={{ animationDelay: "5.0s" }}
             >
               navjivan/&nbsp;&nbsp;chatpdf/&nbsp;&nbsp;cypress/&nbsp;&nbsp;execos/
             </div>
 
             <div
               className="term-line"
-              style={{ animationDelay: "3.9s" }}
+              style={{ animationDelay: "5.4s" }}
               onClick={() => terminalInputRef.current?.focus()}
             >
               {terminalHistory.map((entry, i) => (
               <div key={i} className="mb-4">
                 <div className="flex gap-2 text-muted-foreground">
-                  <span className="text-primary font-bold">visitor@shaurya:~$</span>
+                  <span className="text-primary font-bold">shaurya@dev:~$</span>
                   <span>{entry.command}</span>
                 </div>
                 {entry.response && (
                   <div className="mt-1 text-foreground/90 whitespace-pre-wrap pl-2 border-l border-primary/30 ml-1">
-                    <TerminalResponse text={entry.response} />
+                    <TerminalResponse 
+                      text={entry.response} 
+                      onUpdate={scrollToBottom} 
+                      onFinish={handleTypingFinish}
+                    />
                   </div>
                 )}
               </div>
             ))}
-            <div className="flex gap-2 items-center text-muted-foreground">
-              <span className="text-primary font-bold shrink-0">visitor@shaurya:~$</span>
+            
+            {(!isProcessing && !isTyping) && (
+              <div className="flex gap-2 items-center text-muted-foreground mt-4">
+                <span className="text-primary font-bold shrink-0">shaurya@dev:~$</span>
                 <div className="relative flex-1 min-h-[1em]">
                   <input
                     ref={terminalInputRef}
@@ -453,17 +486,18 @@ export function Hero() {
                     value={terminalValue}
                     onChange={(e) => setTerminalValue(e.target.value)}
                     onKeyDown={handleTerminalKeyDown}
-                    placeholder="try 'contact'"
+                    placeholder="try asking anything"
                     spellCheck="false"
                     autoComplete="off"
                     className="relative z-10 w-full bg-transparent border-none outline-none text-transparent caret-transparent font-mono text-[13px] placeholder:text-muted-foreground/50"
                   />
-                  <span className="absolute inset-0 flex items-center font-mono text-[13px] text-foreground pointer-events-none">
+                  <span className="absolute inset-0 flex items-center whitespace-pre font-mono text-[13px] text-foreground pointer-events-none">
                     {terminalValue}
                     <span className="cursor-block">▌</span>
                   </span>
                 </div>
               </div>
+            )}
             </div>
           </div>
         </div>

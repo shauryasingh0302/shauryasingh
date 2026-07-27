@@ -11,6 +11,21 @@ interface HeaderProps {
 export function Header({ setSearchOpen }: HeaderProps) {
   const { theme, setTheme } = useTheme();
 
+  const scrollTo = (target: string) => {
+    if (typeof window !== 'undefined') {
+      const lenis = (window as any).lenis;
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        lenis.scrollTo(target === "top" ? 0 : target);
+        return;
+      }
+    }
+    if (target === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      document.getElementById(target.replace("#", ""))?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <Container
       component="header"
@@ -19,31 +34,31 @@ export function Header({ setSearchOpen }: HeaderProps) {
     >
       <div
         className="text-xl font-bold font-mono tracking-tighter cursor-pointer"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => scrollTo("top")}
       >
         Shaurya<span className="text-primary">_</span>Singh
       </div>
       <nav className="hidden md:flex gap-8 text-sm font-medium text-muted-foreground ">
         <button
-          onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() => scrollTo("#projects")}
           className="hover:text-primary transition-colors"
         >
           Projects
         </button>
         <button
-          onClick={() => document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() => scrollTo("#skills")}
           className="hover:text-primary transition-colors"
         >
           Skills
         </button>
         <button
-          onClick={() => document.getElementById("blog")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() => scrollTo("#blog")}
           className="hover:text-primary transition-colors"
         >
           Logs
         </button>
         <button
-          onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() => scrollTo("#contact")}
           className="hover:text-primary transition-colors"
         >
           Contact

@@ -49,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth shadcn">
       <body
-        className={`font-body antialiased ${spaceGrotesk.variable} ${jetBrainsMono.variable}`}
+        className={`font-body antialiased select-none ${spaceGrotesk.variable} ${jetBrainsMono.variable}`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LenisProvider>
