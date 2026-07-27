@@ -44,23 +44,19 @@ export function ParticleNetwork() {
       vx: number;
       vy: number;
       size: number;
-      boundsWidth: number;
-      boundsHeight: number;
 
-      constructor(width: number, height: number) {
-        this.boundsWidth = width;
-        this.boundsHeight = height;
-        this.x = Math.random() * this.boundsWidth;
-        this.y = Math.random() * this.boundsHeight;
+      constructor() {
+        this.x = Math.random() * canvas!.width;
+        this.y = Math.random() * canvas!.height;
         this.vx = (Math.random() - 0.5) * 1.5; // slight drift
         this.vy = (Math.random() - 0.5) * 1.5;
         this.size = Math.random() * 2 + 1;
       }
 
       update() {
-        // Bounce off edges using logical bounds
-        if (this.x < 0 || this.x > this.boundsWidth) this.vx *= -1;
-        if (this.y < 0 || this.y > this.boundsHeight) this.vy *= -1;
+        // Bounce off edges
+        if (this.x < 0 || this.x > canvas!.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas!.height) this.vy *= -1;
 
         // Mouse interaction (repel)
         const dx = mouse.x - this.x;
@@ -91,25 +87,15 @@ export function ParticleNetwork() {
     }
 
     const init = () => {
-      const dpr = window.devicePixelRatio || 1;
-      // Set actual canvas size multiplied by devicePixelRatio for crispness
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      
-      // Set CSS size to match window size
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      
-      // Scale context to match DPR
-      ctx.scale(dpr, dpr);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       
       const currentIsMobile = window.innerWidth < 768;
       const currentParticleCount = currentIsMobile ? 60 : 120;
       
       particles = [];
       for (let i = 0; i < currentParticleCount; i++) {
-        // Pass the unscaled width/height to particles so logic remains identical
-        particles.push(new Particle(window.innerWidth, window.innerHeight));
+        particles.push(new Particle());
       }
     };
 
