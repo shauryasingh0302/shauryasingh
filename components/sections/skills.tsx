@@ -122,7 +122,7 @@ export function Skills() {
   return (
     <section
       id="skills"
-      className="py-24 bg-secondary/20 border-t border-border relative overflow-hidden flex flex-col"
+      className="py-16 md:py-24 border-t border-border relative overflow-hidden flex flex-col bg-background"
     >
       <InteractiveFlow />
       <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10">

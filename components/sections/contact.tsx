@@ -94,7 +94,7 @@ export function Contact() {
   }, [gsapReady]);
 
   return (
-    <section id="contact" className="py-24 bg-card border-t border-border relative overflow-hidden flex flex-col">
+    <section id="contact" className="py-16 md:py-24 bg-card border-t border-border relative overflow-hidden flex flex-col">
       <BackgroundMarquee />
       <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10">
         <div ref={sectionRef} className="max-w-2xl mx-auto relative z-10 pointer-events-none [&>*]:pointer-events-auto">

@@ -93,23 +93,7 @@ export function Projects() {
           );
         });
 
-        // Card image parallax on scroll
-        const cards = el.querySelectorAll(".project-card");
-        cards.forEach((card) => {
-          const img = card.querySelector(".project-card-image");
-          if (img) {
-            gsap.to(img, {
-              y: -20,
-              ease: "none",
-              scrollTrigger: {
-                trigger: card,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1,
-              },
-            });
-          }
-        });
+        // Removed parallax to prevent image cropping and border overlap
       }, el);
     }
 
@@ -123,7 +107,7 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="py-32 border-t border-border relative overflow-hidden flex flex-col bg-background"
+      className="py-16 md:py-32 border-t border-border relative overflow-hidden flex flex-col bg-background"
     >
       <InteractiveGrid />
       <div className="mx-auto max-w-7xl w-full flex-1 relative z-10 px-6">
@@ -150,7 +134,7 @@ export function Projects() {
                 style={{ opacity: 0 }}
               >
                 <Card
-                  className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 rounded-none grid grid-rows-subgrid row-span-3 content-start items-start h-full"
+                  className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 overflow-hidden rounded-xl grid grid-rows-subgrid row-span-3 content-start items-start h-full"
                 >
                   <ProjectImage src={project.image} alt={project.title} className="project-card-image" />
                 <div className="grid gap-4">

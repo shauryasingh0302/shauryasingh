@@ -149,7 +149,7 @@ export function Dashboard() {
   }, [gsapReady]);
 
   return (
-    <section id="dashboard" className="py-24 border-t border-border relative overflow-hidden flex flex-col bg-background">
+    <section id="dashboard" className="py-12 md:py-24 border-t border-border relative overflow-hidden flex flex-col bg-background">
       <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10 pointer-events-none">
         <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
           <h2
@@ -159,10 +159,10 @@ export function Dashboard() {
             Live Dashboard
           </h2>
 
-          <div className="dashboard-grid grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-1 flex flex-col gap-6">
+          <div className="dashboard-grid grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div className="md:col-span-1 flex flex-col gap-4 sm:gap-6">
               {/* Spotify Card */}
-              <div className="dashboard-card border border-border/50 bg-card/30 backdrop-blur-sm p-6 relative overflow-hidden group hover:bg-card/40 transition-colors" style={{ opacity: 0 }}>
+              <div className="dashboard-card border border-border/50 bg-card/30 backdrop-blur-sm p-4 sm:p-6 relative overflow-hidden group hover:bg-card/40 transition-colors" style={{ opacity: 0 }}>
                 <div className="flex items-center justify-between mb-6 relative z-10">
                   <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2">
                     <Music className="size-4" /> 
@@ -180,16 +180,16 @@ export function Dashboard() {
                 {spotify?.title ? (
                   <a href={spotify.songUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 relative z-10 group-hover:opacity-80 transition-opacity">
                     {spotify.albumImageUrl && (
-                      <img src={spotify.albumImageUrl} alt="Album Art" className="size-16 object-cover border border-border/50 shadow-lg" />
+                      <img src={spotify.albumImageUrl} alt="Album Art" className="size-12 sm:size-16 object-cover border border-border/50 shadow-lg" />
                     )}
                     <div className="flex flex-col">
-                      <span className="font-bold text-lg truncate max-w-[180px] leading-tight">{spotify.title}</span>
-                      <span className="text-sm text-muted-foreground truncate max-w-[180px]">{spotify.artist}</span>
+                      <span className="font-bold text-base sm:text-lg truncate max-w-[150px] sm:max-w-[180px] leading-tight">{spotify.title}</span>
+                      <span className="text-xs sm:text-sm text-muted-foreground truncate max-w-[150px] sm:max-w-[180px]">{spotify.artist}</span>
                     </div>
                   </a>
                 ) : (
                   <div className="flex items-center gap-4 relative z-10 opacity-50">
-                    <div className="size-16 bg-muted/20 border border-border/50"></div>
+                    <div className="size-12 sm:size-16 bg-muted/20 border border-border/50"></div>
                     <div className="flex flex-col gap-2">
                       <div className="h-4 w-24 bg-muted/20"></div>
                       <div className="h-3 w-16 bg-muted/20"></div>
@@ -203,7 +203,7 @@ export function Dashboard() {
               </div>
 
               {/* WakaTime Card */}
-              <div className="dashboard-card border border-border/50 bg-card/30 backdrop-blur-sm p-6 relative overflow-hidden flex-1 group hover:bg-card/40 transition-colors" style={{ opacity: 0 }}>
+              <div className="dashboard-card border border-border/50 bg-card/30 backdrop-blur-sm p-4 sm:p-6 relative overflow-hidden flex-1 group hover:bg-card/40 transition-colors" style={{ opacity: 0 }}>
                 <div className="flex items-center justify-between mb-6 relative z-10">
                   <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2">
                     <Code2 className="size-4" /> 
@@ -215,16 +215,16 @@ export function Dashboard() {
                   {wakatime && !wakatime.error ? (
                     <div className="flex flex-col gap-4">
                       <div className="flex items-baseline gap-2 mb-2">
-                        <span className="text-3xl font-bold tracking-tighter">{wakatime.human_readable_total_including_other_language || wakatime.human_readable_total || "0 hrs"}</span>
+                        <span className="text-2xl sm:text-3xl font-bold tracking-tighter">{wakatime.human_readable_total_including_other_language || wakatime.human_readable_total || "0 hrs"}</span>
                       </div>
                       <div className="space-y-3">
                         {wakatime.languages?.slice(0, 3).map((lang: any) => (
                           <div key={lang.name} className="flex flex-col gap-1">
-                            <div className="flex justify-between text-xs font-mono">
+                            <div className="flex justify-between text-[10px] sm:text-xs font-mono">
                               <span>{lang.name}</span>
                               <span className="text-muted-foreground">{lang.text}</span>
                             </div>
-                            <div className="h-1.5 w-full bg-muted/30 overflow-hidden">
+                            <div className="h-1 sm:h-1.5 w-full bg-muted/30 overflow-hidden">
                               <div 
                                 className="h-full bg-primary" 
                                 style={{ width: `${lang.percent}%` }}
@@ -244,19 +244,19 @@ export function Dashboard() {
             </div>
 
             {/* GitHub Card */}
-            <div className="dashboard-card md:col-span-2 border border-border/50 bg-card/30 backdrop-blur-sm p-6 relative overflow-hidden group hover:bg-card/40 transition-colors flex flex-col" style={{ opacity: 0 }}>
+            <div className="dashboard-card md:col-span-2 border border-border/50 bg-card/30 backdrop-blur-sm p-4 sm:p-6 relative overflow-hidden group hover:bg-card/40 transition-colors flex flex-col" style={{ opacity: 0 }}>
               <div className="flex items-center justify-between mb-6 relative z-10">
                 <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2">
                   <Github className="size-4" /> 
                   CONTRIBUTIONS
                 </h3>
-                <a href="https://github.com/shauryasingh0302" target="_blank" rel="noreferrer" className="text-xs font-mono text-primary hover:underline">
+                <a href="https://github.com/shauryasingh0302" target="_blank" rel="noreferrer" className="text-[10px] sm:text-xs font-mono text-primary hover:underline">
                   @shauryasingh0302
                 </a>
               </div>
 
               <div ref={githubScrollRef} className="relative z-10 flex-1 flex flex-col justify-center w-full pb-4">
-                <div className="w-full p-6 border border-border/30 bg-background/50 flex flex-col justify-center">
+                <div className="w-full p-2 sm:p-6 border border-border/30 bg-background/50 flex flex-col justify-center">
                   <GitHubCalendar 
                     username="shauryasingh0302" 
                     colorScheme="dark"

@@ -96,8 +96,8 @@ export function Logs() {
 
   return (
     <section
-      id="blog"
-      className="py-24 border-t border-border relative overflow-hidden flex flex-col"
+      id="logs"
+      className="py-16 md:py-32 border-t border-border relative overflow-hidden flex flex-col bg-background"
     >
       <div className="absolute inset-0 opacity-70">
         <InteractiveAurora />
