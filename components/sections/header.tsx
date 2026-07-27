@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, Sun, Moon } from "lucide-react";
+import { useState } from "react";
+import { Search, Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Container } from "@/components/zippystarter/container";
 
@@ -10,12 +11,14 @@ interface HeaderProps {
 
 export function Header({ setSearchOpen }: HeaderProps) {
   const { theme, setTheme } = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const scrollTo = (target: string) => {
     if (typeof window !== 'undefined') {
       const lenis = (window as any).lenis;
       if (lenis && typeof lenis.scrollTo === 'function') {
         lenis.scrollTo(target === "top" ? 0 : target);
+        setIsMobileMenuOpen(false);
         return;
       }
     }
@@ -24,6 +27,7 @@ export function Header({ setSearchOpen }: HeaderProps) {
     } else {
       document.getElementById(target.replace("#", ""))?.scrollIntoView({ behavior: "smooth" });
     }
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -94,11 +98,51 @@ export function Header({ setSearchOpen }: HeaderProps) {
         <a
           href="/resume/shaurya_resume_04.pdf"
           download
-          className="inline-flex items-center px-4 py-1.5 rounded-lg font-mono text-xs tracking-wider uppercase text-foreground dark:text-white transition-colors bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/15 hover:bg-foreground/10 dark:hover:bg-white/10"
+          className="inline-flex items-center px-3 sm:px-4 py-1.5 rounded-lg font-mono text-xs tracking-wider uppercase text-foreground dark:text-white transition-colors bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/15 hover:bg-foreground/10 dark:hover:bg-white/10"
         >
-          shaurya_resume_04.pdf
+          <span className="hidden sm:inline">shaurya_resume_04.pdf</span>
+          <span className="sm:hidden">RESUME</span>
         </a>
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden relative flex items-center justify-center size-9 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-md border-b border-border md:hidden flex flex-col p-4 shadow-lg">
+          <nav className="flex flex-col gap-4 text-sm font-medium text-muted-foreground">
+            <button
+              onClick={() => scrollTo("#projects")}
+              className="hover:text-primary transition-colors text-left py-2 border-b border-border/50"
+            >
+              Projects
+            </button>
+            <button
+              onClick={() => scrollTo("#skills")}
+              className="hover:text-primary transition-colors text-left py-2 border-b border-border/50"
+            >
+              Skills
+            </button>
+            <button
+              onClick={() => scrollTo("#blog")}
+              className="hover:text-primary transition-colors text-left py-2 border-b border-border/50"
+            >
+              Logs
+            </button>
+            <button
+              onClick={() => scrollTo("#contact")}
+              className="hover:text-primary transition-colors text-left py-2"
+            >
+              Contact
+            </button>
+          </nav>
+        </div>
+      )}
     </Container>
   );
 }

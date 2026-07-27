@@ -126,7 +126,7 @@ export function Projects() {
       <InteractiveGrid />
       <div className="mx-auto max-w-7xl w-full flex-1 relative z-10 px-6">
         <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
-          <div className="projects-header grid justify-between items-end mb-16 gap-4">
+          <div className="projects-header flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
             <div>
               <h2 className="text-4xl md:text-6xl font-display tracking-tighter mb-4" style={{ perspective: "400px" }}>
                 <span className="projects-title-line block">SELECTED</span>

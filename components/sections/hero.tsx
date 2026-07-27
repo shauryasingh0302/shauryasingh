@@ -358,7 +358,7 @@ export function Hero() {
         </div>
 
         {/* Decorative Abstract Element — terminal window */}
-        <div className="hero-terminal hidden md:block relative h-[500px] w-full border border-border/30 bg-card/40 backdrop-blur-sm overflow-hidden" style={{ opacity: 0 }}>
+        <div className="hero-terminal relative h-[350px] md:h-[500px] mt-8 md:mt-0 w-full border border-border/30 bg-card/40 backdrop-blur-sm overflow-hidden" style={{ opacity: 0 }}>
           <div className="absolute top-0 left-0 size-4 border-t-2 border-l-2 border-primary"></div>
           <div className="absolute top-0 right-0 size-4 border-t-2 border-r-2 border-primary"></div>
           <div className="absolute bottom-0 left-0 size-4 border-b-2 border-l-2 border-primary"></div>
