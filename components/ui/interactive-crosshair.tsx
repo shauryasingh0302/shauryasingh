@@ -43,19 +43,7 @@ export function InteractiveCrosshair({ className }: { className?: string }) {
       mouse.currentX += (mouse.x - mouse.currentX) * 0.15;
       mouse.currentY += (mouse.y - mouse.currentY) * 0.15;
 
-      // Draw faint background grid
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += spacing) {
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-      }
-      for (let y = 0; y <= height; y += spacing) {
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-      }
-      ctx.strokeStyle = baseColor;
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      // Removed static background grid to keep it purely interactive and minimalist
 
       // Draw active crosshairs if mouse is on screen
       if (mouse.x >= 0 && mouse.x <= width && mouse.y >= 0 && mouse.y <= height) {

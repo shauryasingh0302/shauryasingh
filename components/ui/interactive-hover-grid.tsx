@@ -67,19 +67,7 @@ export function InteractiveHoverGrid({ className }: { className?: string }) {
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw faint background grid lines
-      ctx.beginPath();
-      for (let i = 0; i <= cols; i++) {
-        ctx.moveTo(i * cellSize, 0);
-        ctx.lineTo(i * cellSize, height);
-      }
-      for (let j = 0; j <= rows; j++) {
-        ctx.moveTo(0, j * cellSize);
-        ctx.lineTo(width, j * cellSize);
-      }
-      ctx.strokeStyle = lineColor;
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      // Faint background grid lines removed to ensure it is purely interactive and not visually repetitive
 
       // Determine currently hovered cell
       let currentHoveredCol = -1;

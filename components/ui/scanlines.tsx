@@ -6,7 +6,7 @@ export function Scanlines({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-[0.15] dark:opacity-[0.25]",
+        "absolute inset-0 z-0 pointer-events-none overflow-hidden",
         className
       )}
     >

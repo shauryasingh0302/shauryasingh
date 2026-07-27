@@ -1,42 +1,38 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export function InteractiveSpotlight({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let isHovering = false;
 
     const updateMousePosition = (ev: MouseEvent) => {
-      if (!containerRef.current || !glowRef.current || !gridRef.current) return;
+      if (!containerRef.current || !glowRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const x = ev.clientX - rect.left;
       const y = ev.clientY - rect.top;
 
       if (isHovering) {
-        glowRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(167,243,208,0.1), transparent 40%)`;
-        gridRef.current.style.maskImage = `radial-gradient(400px circle at ${x}px ${y}px, black, transparent 100%)`;
-        gridRef.current.style.webkitMaskImage = `radial-gradient(400px circle at ${x}px ${y}px, black, transparent 100%)`;
+        // Soft, wide radial spotlight in primary green
+        glowRef.current.style.background = `radial-gradient(800px circle at ${x}px ${y}px, rgba(16, 185, 129, 0.15), transparent 60%)`;
       }
     };
 
     const handleMouseEnter = () => {
       isHovering = true;
-      if (glowRef.current && gridRef.current) {
+      if (glowRef.current) {
         glowRef.current.style.opacity = "1";
-        gridRef.current.style.opacity = "1";
       }
     };
     
     const handleMouseLeave = () => {
       isHovering = false;
-      if (glowRef.current && gridRef.current) {
+      if (glowRef.current) {
         glowRef.current.style.opacity = "0";
-        gridRef.current.style.opacity = "0";
       }
     };
 
@@ -67,17 +63,6 @@ export function InteractiveSpotlight({ className }: { className?: string }) {
       <div
         ref={glowRef}
         className="absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none"
-      />
-      <div
-        ref={gridRef}
-        className="absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(5,150,105,0.2) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(5,150,105,0.2) 1px, transparent 1px)
-          `,
-          backgroundSize: "40px 40px",
-        }}
       />
     </div>
   );

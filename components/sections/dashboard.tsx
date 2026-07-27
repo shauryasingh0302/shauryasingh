@@ -5,7 +5,6 @@ import useSWR from "swr";
 import { Music, Code2, Github } from "lucide-react";
 import { GitHubCalendar } from "react-github-calendar";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
-import { GlowingOrb } from "@/components/ui/glowing-orb";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -126,7 +125,6 @@ export function Dashboard() {
 
   return (
     <section id="dashboard" className="py-24 border-t border-border relative overflow-hidden flex flex-col bg-background">
-      <InteractiveMatrix className="absolute inset-0 w-full h-full pointer-events-auto z-0" />
       <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10 pointer-events-none">
         <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
           <h2
