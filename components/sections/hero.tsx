@@ -150,38 +150,7 @@ export function Hero() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const el = terminalBodyRef.current;
-    if (!el) return;
 
-    // We must use a native event listener with passive: false to explicitly block browser scroll
-    const handleWheel = (e: WheelEvent) => {
-      // If the terminal has no scrollable content, block page scroll entirely
-      if (el.scrollHeight <= el.clientHeight) {
-        e.preventDefault();
-        return;
-      }
-      
-      // If scrolling UP and we are already at the top of the terminal
-      if (e.deltaY < 0 && el.scrollTop <= 0) {
-        e.preventDefault();
-        return;
-      }
-      
-      // If scrolling DOWN and we are already at the bottom of the terminal
-      // We add a tiny 1px buffer to account for sub-pixel rendering rounding errors
-      if (e.deltaY > 0 && Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight - 1) {
-        e.preventDefault();
-        return;
-      }
-      
-      // Otherwise, we are scrolling inside the terminal, so we allow it but stop propagation
-      e.stopPropagation();
-    };
-
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, []);
 
   useEffect(() => {
     if (!heroVisible || !terminalReady) return;
@@ -199,28 +168,36 @@ export function Hero() {
     return () => document.removeEventListener("keydown", handler);
   }, [heroVisible, terminalReady]);
 
-  // Auto-center terminal on mobile when 80% visible
+  // Auto-center terminal on mobile when 70% visible after 1 second
   useEffect(() => {
     if (typeof window === 'undefined' || window.innerWidth >= 768) return;
     
     const container = terminalContainerRef.current;
     if (!container) return;
     
+    let centerTimeout: NodeJS.Timeout;
+    
     const observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
-      // Trigger every time it crosses the 80% visibility threshold
       if (entry.isIntersecting) {
-        const lenis = (window as any).lenis;
-        if (lenis && typeof lenis.scrollTo === 'function') {
-          lenis.scrollTo(container, { offset: -(window.innerHeight / 2 - container.offsetHeight / 2), duration: 1.2 });
-        } else {
-          container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        centerTimeout = setTimeout(() => {
+          const lenis = (window as any).lenis;
+          if (lenis && typeof lenis.scrollTo === 'function') {
+            lenis.scrollTo(container, { offset: -(window.innerHeight / 2 - container.offsetHeight / 2), duration: 1.2 });
+          } else {
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 1000);
+      } else {
+        clearTimeout(centerTimeout);
       }
-    }, { threshold: 0.8 });
+    }, { threshold: 0.7 });
     
     observer.observe(container);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(centerTimeout);
+    };
   }, []);
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -415,14 +392,10 @@ export function Hero() {
             <span className="w-12"></span>
           </div>
 
-          {/* Terminal body */}
           <div 
             ref={terminalBodyRef}
+            data-lenis-prevent="true"
             className="p-6 h-[calc(100%-49px)] overflow-y-auto overscroll-contain font-mono text-[13px] leading-relaxed select-text [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-            onWheel={(e) => {
-              // Stop propagation to prevent any potential GSAP/custom scroll listeners on the page from picking this up
-              e.stopPropagation();
-            }}
           >
             <div className="term-line mb-4" style={{ animationDelay: "1.6s" }}>
               <span className="text-primary">shaurya@dev</span>

@@ -28,16 +28,7 @@ export function Dashboard() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const selectLast4Months = (contributions: any[]) => {
-    const today = new Date();
-    const fourMonthsAgo = new Date();
-    fourMonthsAgo.setMonth(today.getMonth() - 4);
-    
-    return contributions.filter((day: any) => {
-      const date = new Date(day.date);
-      return date >= fourMonthsAgo;
-    });
-  };
+
 
   // Wrap the SVG in a scrollable container and scroll to the right
   useEffect(() => {
@@ -56,10 +47,8 @@ export function Dashboard() {
         const wrapper = document.createElement("div");
         wrapper.className = "svg-scroller overflow-x-auto pb-4 w-full flex justify-start md:justify-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]";
         
-        // Force the SVG to maintain a readable size on desktop. On mobile, we only show 4 months so it fits naturally without stretching.
-        if (window.innerWidth >= 768) {
-          svg.style.minWidth = "750px";
-        }
+        // Force the SVG to maintain a readable size so it can scroll horizontally on smaller screens.
+        svg.style.minWidth = "750px";
         
         // Move the SVG into the wrapper
         svg.parentNode?.insertBefore(wrapper, svg);
@@ -272,7 +261,6 @@ export function Dashboard() {
                       fontSize={12}
                       blockSize={12}
                       blockMargin={4}
-                      transformData={isMobile ? selectLast4Months : undefined}
                     />
                   ) : (
                     <div className="flex items-center justify-center w-full h-full text-muted-foreground animate-pulse text-sm">
