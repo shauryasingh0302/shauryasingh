@@ -190,7 +190,7 @@ export function InteractiveAurora({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "absolute inset-0 z-0 overflow-hidden pointer-events-auto blur-[60px] md:blur-[100px] bg-black dark:bg-black",
+        "absolute inset-0 z-0 overflow-hidden pointer-events-auto blur-[60px] md:blur-[100px] bg-background",
         className
       )}
     >

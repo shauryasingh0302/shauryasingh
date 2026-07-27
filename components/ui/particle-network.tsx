@@ -215,7 +215,7 @@ export function ParticleNetwork() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-0 w-full h-full pointer-events-none bg-black dark:bg-black"
+      className="absolute inset-0 z-0 w-full h-full pointer-events-none bg-background"
     />
   );
 }

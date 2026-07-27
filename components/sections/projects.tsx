@@ -134,7 +134,7 @@ export function Projects() {
                 style={{ opacity: 0 }}
               >
                 <Card
-                  className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 overflow-hidden rounded-xl grid grid-rows-subgrid row-span-3 content-start items-start h-full"
+                  className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 overflow-hidden rounded-none grid grid-rows-subgrid row-span-3 content-start items-start h-full"
                 >
                   <ProjectImage src={project.image} alt={project.title} className="project-card-image" />
                 <div className="grid gap-4">

@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { Music, Code2, Github } from "lucide-react";
 import { GitHubCalendar } from "react-github-calendar";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
+import { useTheme } from "next-themes";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -14,10 +15,13 @@ export function Dashboard() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const githubScrollRef = useRef<HTMLDivElement>(null);
   const gsapReady = useGsapReady();
+  const { theme } = useTheme();
 
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize(); // Check on mount
     window.addEventListener("resize", handleResize);
@@ -256,18 +260,25 @@ export function Dashboard() {
               </div>
 
               <div ref={githubScrollRef} className="relative z-10 flex-1 flex flex-col justify-center w-full pb-4">
-                <div className="w-full p-2 sm:p-6 border border-border/30 bg-background/50 flex flex-col justify-center">
-                  <GitHubCalendar 
-                    username="shauryasingh0302" 
-                    colorScheme="dark"
-                    theme={{
-                      dark: ['#1e1e1e', '#0e4429', '#006d32', '#26a641', '#39d353'],
-                    }}
-                    fontSize={12}
-                    blockSize={12}
-                    blockMargin={4}
-                    transformData={isMobile ? selectLast3Months : undefined}
-                  />
+                <div className="w-full p-2 sm:p-6 border border-border/30 bg-background/50 flex flex-col justify-center min-h-[200px]">
+                  {mounted ? (
+                    <GitHubCalendar 
+                      username="shauryasingh0302" 
+                      colorScheme={theme === "dark" ? "dark" : "light"}
+                      theme={{
+                        light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
+                        dark: ['#1e1e1e', '#0e4429', '#006d32', '#26a641', '#39d353'],
+                      }}
+                      fontSize={12}
+                      blockSize={12}
+                      blockMargin={4}
+                      transformData={isMobile ? selectLast3Months : undefined}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full text-muted-foreground animate-pulse text-sm">
+                      Loading contributions...
+                    </div>
+                  )}
                 </div>
               </div>
               

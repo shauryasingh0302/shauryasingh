@@ -5,6 +5,7 @@ import { Search, Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Container } from "@/components/zippystarter/container";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 interface HeaderProps {
   setSearchOpen: (open: boolean) => void;
@@ -101,14 +102,15 @@ export function Header({ setSearchOpen }: HeaderProps) {
           </button>
         </MagneticButton>
         <MagneticButton strength={0.2}>
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          <AnimatedThemeToggler
+            theme={theme as "light" | "dark"}
+            onThemeChange={setTheme}
             className="relative flex items-center justify-center size-9 text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Toggle theme"
           >
             <Sun className="size-[18px] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute size-[18px] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </button>
+          </AnimatedThemeToggler>
         </MagneticButton>
         <MagneticButton strength={0.2}>
           <a

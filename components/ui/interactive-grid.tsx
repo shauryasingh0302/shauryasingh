@@ -172,7 +172,7 @@ export function InteractiveGrid({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "absolute inset-0 z-0 overflow-hidden pointer-events-auto bg-black dark:bg-black",
+        "absolute inset-0 z-0 overflow-hidden pointer-events-auto bg-background",
         className
       )}
     >

@@ -316,7 +316,7 @@ export function Hero() {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <div className="relative w-[100vw] h-[100vh] bg-background overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/hero-bg.jpg')] before:absolute before:inset-0 before:bg-primary before:mix-blend-color-dodge dark:before:mix-blend-color" />
+          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/hero-bg.jpg')] before:absolute before:inset-0 before:bg-primary before:mix-blend-color before:opacity-30 dark:before:opacity-100" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
         <ParticleNetwork />
