@@ -175,12 +175,12 @@ export function Hero() {
     const container = terminalContainerRef.current;
     if (!container) return;
     
-    let centerTimeout: NodeJS.Timeout;
+    let timeoutId: NodeJS.Timeout;
     
     const observer = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (entry.isIntersecting) {
-        centerTimeout = setTimeout(() => {
+        timeoutId = setTimeout(() => {
           const lenis = (window as any).lenis;
           if (lenis && typeof lenis.scrollTo === 'function') {
             lenis.scrollTo(container, { offset: -(window.innerHeight / 2 - container.offsetHeight / 2), duration: 1.2 });
@@ -189,14 +189,14 @@ export function Hero() {
           }
         }, 1000);
       } else {
-        clearTimeout(centerTimeout);
+        clearTimeout(timeoutId);
       }
     }, { threshold: 0.7 });
     
     observer.observe(container);
     return () => {
       observer.disconnect();
-      clearTimeout(centerTimeout);
+      clearTimeout(timeoutId);
     };
   }, []);
 

@@ -114,20 +114,32 @@ export function Contact() {
             const data = new FormData(form);
             const json: Record<string, string> = {};
             data.forEach((value, key) => { json[key] = value.toString(); });
+            
+            // Add Formsubmit config
+            json._captcha = "false";
+            json._template = "table";
+
             try {
-              const res = await fetch("/api/contact", {
+              const res = await fetch("https://formsubmit.co/ajax/shauryasingh0302@icloud.com", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                  "Content-Type": "application/json",
+                  "Accept": "application/json"
+                },
                 body: JSON.stringify(json),
               });
+              
               const result = await res.json();
-              if (result.success) {
+              
+              if (result.success === "true" || result.success === true) {
                 form.reset();
                 setToast({ visible: true, message: "Your message has been communicated." });
               } else {
+                console.error("Formsubmit error:", result);
                 setToast({ visible: true, message: "Failed to send. Please try again." });
               }
-            } catch {
+            } catch (err) {
+              console.error("Fetch error:", err);
               setToast({ visible: true, message: "Failed to send. Please try again." });
             } finally {
               setTimeout(() => setToast({ visible: false, message: "" }), 4000);
