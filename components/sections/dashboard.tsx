@@ -15,6 +15,26 @@ export function Dashboard() {
   const githubScrollRef = useRef<HTMLDivElement>(null);
   const gsapReady = useGsapReady();
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize(); // Check on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const selectLast3Months = (contributions: any[]) => {
+    const today = new Date();
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(today.getMonth() - 3);
+    
+    return contributions.filter((day: any) => {
+      const date = new Date(day.date);
+      return date >= threeMonthsAgo;
+    });
+  };
+
   // Wrap the SVG in a scrollable container and scroll to the right
   useEffect(() => {
     if (!githubScrollRef.current) return;
@@ -30,7 +50,12 @@ export function Dashboard() {
       if (svg && footer && !svg.parentElement?.classList.contains("svg-scroller")) {
         // Create a scrollable wrapper just for the SVG
         const wrapper = document.createElement("div");
-        wrapper.className = "svg-scroller overflow-x-auto pb-4 w-full flex justify-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]";
+        wrapper.className = "svg-scroller overflow-x-auto pb-4 w-full flex justify-start md:justify-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]";
+        
+        // Force the SVG to maintain a readable size on desktop. On mobile, we only show 3 months so it fits naturally without stretching.
+        if (window.innerWidth >= 768) {
+          svg.style.minWidth = "750px";
+        }
         
         // Move the SVG into the wrapper
         svg.parentNode?.insertBefore(wrapper, svg);
@@ -172,7 +197,9 @@ export function Dashboard() {
                   </div>
                 )}
                 {/* Background ambient glow based on spotify presence */}
-                <div className="absolute -top-10 -right-10 size-40 bg-primary/10 rounded-full blur-[50px] pointer-events-none"></div>
+                {spotify?.isPlaying && (
+                  <div className="absolute -top-10 -right-10 size-40 bg-primary/10 rounded-full blur-[50px] pointer-events-none"></div>
+                )}
               </div>
 
               {/* WakaTime Card */}
@@ -239,6 +266,7 @@ export function Dashboard() {
                     fontSize={12}
                     blockSize={12}
                     blockMargin={4}
+                    transformData={isMobile ? selectLast3Months : undefined}
                   />
                 </div>
               </div>
