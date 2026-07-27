@@ -4,7 +4,7 @@ export function BackgroundMarquee({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "absolute inset-0 z-0 overflow-hidden pointer-events-none select-none flex flex-col justify-center gap-8 opacity-10 dark:opacity-10",
+        "absolute inset-0 z-0 overflow-hidden pointer-events-none select-none flex flex-col justify-center gap-8 opacity-40 dark:opacity-20",
         className
       )}
     >

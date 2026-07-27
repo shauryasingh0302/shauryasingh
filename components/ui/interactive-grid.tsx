@@ -24,7 +24,7 @@ export function InteractiveGrid({ className }: { className?: string }) {
     const isDark = resolvedTheme === "dark";
     // We will use the primary color's RGB values for all dots to keep it clean.
     // The base dots will just have a very low opacity.
-    const rgb = isDark ? "167, 243, 208" : "5, 150, 105";
+    const rgb = isDark ? "167, 243, 208" : "0, 0, 0";
     
     const spacing = 30; // Denser grid
     let dots: { x: number; y: number; baseX: number; baseY: number; size: number; alpha: number }[] = [];

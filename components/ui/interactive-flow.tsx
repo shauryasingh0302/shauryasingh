@@ -22,7 +22,7 @@ export function InteractiveFlow({ className }: { className?: string }) {
     let height = 0;
 
     const isDark = resolvedTheme === "dark";
-    const particleColor = isDark ? "rgba(167, 243, 208, 0.4)" : "rgba(5, 150, 105, 0.4)";
+    const particleColor = isDark ? "rgba(167, 243, 208, 0.4)" : "rgba(0, 0, 0, 0.7)";
     
     let particles: Particle[] = [];
     const mouse = { x: -1000, y: -1000, clientX: -1000, clientY: -1000 };

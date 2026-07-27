@@ -28,8 +28,8 @@ export function ParticleNetwork() {
     // Using the primary color roughly. We can extract it from CSS variables, 
     // but for canvas, it's easier to use a solid hex or rgba based on theme.
     // The current primary is an OKLCH vibrant green, so we use a similar hex or rgba for drawing.
-    const particleColor = isDark ? "rgba(167, 243, 208, 0.4)" : "rgba(5, 150, 105, 0.3)";
-    const lineColor = isDark ? "rgba(167, 243, 208, " : "rgba(5, 150, 105, ";
+    const particleColor = isDark ? "rgba(167, 243, 208, 0.4)" : "rgba(0, 0, 0, 0.15)";
+    const lineColor = isDark ? "rgba(167, 243, 208, " : "rgba(0, 0, 0, ";
 
     let mouse = {
       x: -1000,

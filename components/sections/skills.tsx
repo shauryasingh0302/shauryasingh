@@ -176,7 +176,7 @@ export function Skills() {
                     <span className="flex-shrink-0 size-5 flex items-center justify-center">
                       {skill.customSvg ? (
                         /* Pinecone custom SVG */
-                        <svg width="18" height="18" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-70 group-hover:opacity-100 transition-opacity">
+                        <svg width="18" height="18" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-100 dark:opacity-70 dark:group-hover:opacity-100 transition-opacity">
                           <path d="M50 8 L62 32 L75 28 L63 50 L78 48 L58 72 L65 70 L50 92 L35 70 L42 72 L22 48 L37 50 L25 28 L38 32 Z" fill="currentColor" className="text-muted-foreground group-hover:text-foreground transition-colors" />
                           <rect x="44" y="88" width="12" height="10" rx="3" fill="currentColor" className="text-muted-foreground group-hover:text-foreground transition-colors" />
                         </svg>
@@ -186,7 +186,7 @@ export function Skills() {
                           alt={skill.name}
                           width={18}
                           height={18}
-                          className={`object-contain opacity-70 group-hover:opacity-100 transition-opacity ${
+                          className={`object-contain opacity-100 dark:opacity-70 dark:group-hover:opacity-100 transition-opacity ${
                             skill.invertDark ? "dark:invert" : ""
                           }`}
                           onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}

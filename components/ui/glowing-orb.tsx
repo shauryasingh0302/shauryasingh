@@ -59,13 +59,13 @@ export function GlowingOrb({ className }: { className?: string }) {
     >
       <div
         ref={orbRef}
-        className="absolute top-1/4 left-1/4 w-[60vw] max-w-[600px] aspect-square rounded-full bg-primary/20 dark:bg-primary/10 blur-[100px] md:blur-[140px] mix-blend-multiply dark:mix-blend-screen"
+        className="absolute top-1/4 left-1/4 w-[60vw] max-w-[600px] aspect-square rounded-full bg-black/5 dark:bg-primary/10 blur-[100px] md:blur-[140px] mix-blend-normal dark:mix-blend-screen"
         style={{ transform: "translate(-50%, -50%)" }}
       />
       
       {/* Secondary colored orb */}
       <div 
-        className="absolute bottom-1/4 right-1/4 w-[40vw] max-w-[400px] aspect-square rounded-full bg-blue-500/10 dark:bg-blue-500/5 blur-[80px] md:blur-[120px] mix-blend-multiply dark:mix-blend-screen"
+        className="absolute bottom-1/4 right-1/4 w-[40vw] max-w-[400px] aspect-square rounded-full bg-black/5 dark:bg-blue-500/5 blur-[80px] md:blur-[120px] mix-blend-normal dark:mix-blend-screen"
         style={{ transform: "translate(50%, 50%)" }}
       />
     </div>
