@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface ProjectImageProps {
@@ -11,24 +9,14 @@ interface ProjectImageProps {
 }
 
 export function ProjectImage({ src, alt, className }: ProjectImageProps) {
-  const [loaded, setLoaded] = useState(false);
-
   return (
-    <div
+    <img
+      src={src}
+      alt={alt}
       className={cn(
-        "bg-primary relative aspect-square overflow-hidden border-b border-border transition-opacity duration-500",
-        loaded ? "opacity-100" : "opacity-0",
+        "w-full h-auto block border-b border-border bg-muted",
         className
       )}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        onLoad={() => setLoaded(true)}
-        className="object-cover group-hover:scale-105 transition-transform duration-500 grayscale mix-blend-luminosity dark:mix-blend-darken"
-      />
-      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    </div>
+    />
   );
 }

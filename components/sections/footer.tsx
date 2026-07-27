@@ -10,7 +10,7 @@ export function Footer() {
     >
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="text-xs font-mono text-muted-foreground">
-          © 2025 SHAURYA SINGH. ALL RIGHTS RESERVED.
+          © 2026 SHAURYA SINGH. ALL RIGHTS RESERVED.
         </div>
         <div className="flex gap-6 text-xs font-mono text-muted-foreground">
           <MagneticButton strength={0.2}>

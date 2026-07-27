@@ -99,7 +99,9 @@ export function Logs() {
       id="blog"
       className="py-24 border-t border-border relative overflow-hidden flex flex-col"
     >
-      <InteractiveAurora />
+      <div className="absolute inset-0 opacity-70">
+        <InteractiveAurora />
+      </div>
       <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10">
         <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
           <h2

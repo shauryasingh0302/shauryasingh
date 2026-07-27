@@ -34,36 +34,36 @@ export const projects: Project[] = [
     description:
       "AI-powered smoking cessation & wellness platform. Memory-augmented goal engine using Pinecone vector embeddings and an agentic AI coach for personalized fitness and cessation plans. Winner, Smart India Hackathon 2025.",
     tags: ["React Native", "Expo", "TypeScript", "Node.js", "Pinecone"],
-    image: "/project-placeholder-1.jpg",
+    image: "/images/projects/project-placeholder-1.jpg",
     link: "#",
-    repo: "#",
+    repo: "https://www.github.com/shauryasingh0302/navjivan",
   },
   {
     title: "ChatPDF",
     description:
       "Full-stack Retrieval-Augmented Generation (RAG) app for natural language querying over uploaded PDFs, powered by LangChain, Pinecone, and Google Gemini.",
     tags: ["Next.js", "LangChain", "Pinecone", "Gemini API", "Supabase"],
-    image: "/project-placeholder-2.jpg",
-    link: "#",
-    repo: "#",
+    image: "/images/projects/project-placeholder-2.jpg",
+    link: "https://chatpdf-fojl.onrender.com",
+    repo: "https://www.github.com/shauryasingh0302/chatpdf",
   },
   {
     title: "Cypress",
     description:
       "Real-time collaborative workspace SaaS with live multi-user co-editing, cursors, nested workspaces, a custom rich text editor, and subscription billing.",
     tags: ["Next.js", "WebSockets", "Drizzle ORM", "Clerk"],
-    image: "/project-placeholder-3.jpg",
-    link: "#",
-    repo: "#",
+    image: "/images/projects/project-placeholder-3.jpg",
+    link: "https://cypress-zsjp.onrender.com",
+    repo: "https://www.github.com/shauryasingh0302/cypress",
   },
   {
     title: "ExecOS",
     description:
       "Autonomous AI executive assistant that reads unread emails on a schedule, understands intent via an LLM, and acts on the user's behalf — drafting replies, extracting tasks, and creating calendar events.",
     tags: ["Vercel AI SDK", "Groq", "Drizzle ORM", "Neon Postgres"],
-    image: "/project-placeholder-3.jpg",
-    link: "#",
-    repo: "#",
+    image: "/images/projects/project-placeholder-4.jpg",
+    link: "https://execos-nsjw.onrender.com",
+    repo: "https://www.github.com/shauryasingh0302/execos",
   },
 ];
 

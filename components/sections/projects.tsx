@@ -150,11 +150,9 @@ export function Projects() {
                 style={{ opacity: 0 }}
               >
                 <Card
-                  className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 rounded-none overflow-hidden grid grid-rows-subgrid row-span-3 content-start items-start h-full"
+                  className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 rounded-none grid grid-rows-subgrid row-span-3 content-start items-start h-full"
                 >
-                <div className="overflow-hidden">
                   <ProjectImage src={project.image} alt={project.title} className="project-card-image" />
-                </div>
                 <div className="grid gap-4">
                   <CardHeader className="grid gap-4">
                     <CardTitle className="text-2xl font-display group-hover:text-primary transition-colors">

@@ -6,9 +6,17 @@ export async function POST(request: Request) {
     body._captcha = "false";
     body._template = "table";
 
+    const origin = request.headers.get("origin") || "https://shauryasingh.onrender.com";
+    const referer = request.headers.get("referer") || "https://shauryasingh.onrender.com/";
+
     const res = await fetch("https://formsubmit.co/ajax/shauryasingh0302@icloud.com", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: { 
+        "Content-Type": "application/json", 
+        "Accept": "application/json",
+        "Origin": origin,
+        "Referer": referer
+      },
       body: JSON.stringify(body),
     });
 

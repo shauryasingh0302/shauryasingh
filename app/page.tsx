@@ -6,6 +6,7 @@ import { Hero } from "@/components/sections/hero";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
 import { Logs } from "@/components/sections/logs";
+import { Dashboard } from "@/components/sections/dashboard";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
 import { SearchOverlay } from "@/components/search-overlay";
@@ -91,6 +92,7 @@ export default function Home() {
       <Projects />
       <Skills />
       <Logs />
+      <Dashboard />
       <Contact />
       <Footer />
       {searchOpen && (

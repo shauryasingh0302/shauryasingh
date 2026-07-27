@@ -122,7 +122,7 @@ export function InteractiveMatrix({ className }: { className?: string }) {
     >
       <canvas
         ref={canvasRef}
-        className="w-full h-full opacity-[0.15] dark:opacity-[0.25]"
+        className="w-full h-full opacity-70"
       />
     </div>
   );
