@@ -64,35 +64,24 @@ export function InteractiveGrid({ className }: { className?: string }) {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         let targetX = dot.baseX;
-        let targetY = dot.baseY;
         let targetSize = 1;
         let color = baseColor;
 
         if (distance < radius) {
           const force = (radius - distance) / radius;
-          // Pull slightly toward mouse
-          targetX = dot.baseX + dx * force * 0.2;
-          targetY = dot.baseY + dy * force * 0.2;
-          // Increase size based on proximity
-          targetSize = 1 + force * 2.5;
+          // Only glow and slightly scale, NO movement
+          targetSize = 1 + force * 2;
           
           // Interpolate color opacity for highlight
           const alpha = 0.1 + force * 0.7;
           color = isDark ? `rgba(167, 243, 208, ${alpha})` : `rgba(5, 150, 105, ${alpha})`;
-        } else {
-          // Slowly return to base size and position
-          targetX = dot.baseX;
-          targetY = dot.baseY;
-          targetSize = 1;
         }
 
-        // Smooth interpolation
-        dot.x += (targetX - dot.x) * 0.1;
-        dot.y += (targetY - dot.y) * 0.1;
+        // Smooth interpolation for size only
         dot.size += (targetSize - dot.size) * 0.1;
 
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+        ctx.arc(dot.baseX, dot.baseY, dot.size, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
       }
@@ -115,18 +104,33 @@ export function InteractiveGrid({ className }: { className?: string }) {
       init();
     };
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!animationFrameId) draw();
+        } else {
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = 0;
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+
     init();
-    draw();
+    observer.observe(container);
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [resolvedTheme]);
 

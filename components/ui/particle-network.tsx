@@ -135,15 +135,33 @@ export function ParticleNetwork() {
       mouse.y = -1000;
     };
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!animationFrameId) animate();
+        } else {
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = 0;
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+
+    init();
+    observer.observe(canvas);
+
     window.addEventListener("resize", handleResize);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseout", handleMouseLeave);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseout", handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("mouseleave", handleMouseLeave);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [resolvedTheme]);
 

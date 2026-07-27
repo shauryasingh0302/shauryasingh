@@ -6,9 +6,11 @@ import { cn } from "@/lib/utils";
 export function InteractiveSkillBox({
   children,
   className,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   const divRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -50,6 +52,7 @@ export function InteractiveSkillBox({
       onBlur={handleBlur}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={style}
       className={cn(
         "relative overflow-hidden rounded-md border border-border bg-background p-4 flex flex-col items-center justify-center aspect-square group",
         className

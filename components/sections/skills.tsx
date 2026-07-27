@@ -8,6 +8,8 @@ import { useGsapReady } from "@/components/gsap/gsap-provider";
 import { AnimatedGrid } from "@/components/ui/animated-grid";
 import { InteractiveSkillBox } from "@/components/ui/interactive-skill-box";
 
+import { InteractiveFlow } from "@/components/ui/interactive-flow";
+
 export function Skills() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const gsapReady = useGsapReady();
@@ -111,11 +113,12 @@ export function Skills() {
     <Container
       id="skills"
       component="section"
-      wrapperClassName="py-24 bg-secondary/20 border-t border-border relative overflow-hidden"
+      wrapperClassName="py-24 bg-secondary/20 border-t border-border relative overflow-hidden bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px]"
       className="mx-auto max-w-7xl flex-1 relative z-10"
     >
       <AnimatedGrid />
-      <div ref={sectionRef} className="grid md:grid-cols-12 gap-12 relative z-10">
+      <InteractiveFlow />
+      <div ref={sectionRef} className="grid md:grid-cols-12 gap-12 relative z-10 pointer-events-none [&>*]:pointer-events-auto">
         <div className="skills-left md:col-span-4" style={{ opacity: 0 }}>
           <h2 className="text-4xl font-display tracking-tighter mb-6">
             TECH_STACK

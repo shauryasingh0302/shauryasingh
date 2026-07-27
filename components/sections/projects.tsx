@@ -16,7 +16,7 @@ import { ProjectImage } from "@/components/project-image";
 import { projects } from "@/lib/portfolio-data";
 import Link from "next/link";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
-import { InteractiveFlow } from "@/components/ui/interactive-flow";
+import { BackgroundMarquee } from "@/components/ui/background-marquee";
 
 export function Projects() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -117,38 +117,37 @@ export function Projects() {
   }, [gsapReady]);
 
   return (
-    <Container
+    <section
       id="projects"
-      component="section"
-      wrapperClassName="py-24 border-t border-border relative overflow-hidden"
-      className="mx-auto max-w-7xl flex-1 relative z-10"
+      className="py-32 border-t border-border relative overflow-hidden flex flex-col bg-background"
     >
-      <InteractiveFlow />
-      <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
-        <div className="projects-header grid justify-between items-end mb-16 gap-4">
-          <div>
-            <h2 className="text-4xl md:text-6xl font-display tracking-tighter mb-4" style={{ perspective: "400px" }}>
-              <span className="projects-title-line block">SELECTED</span>
-              <span className="projects-title-line block text-muted-foreground">WORKS</span>
-            </h2>
-            <div className="projects-accent-line h-1 w-24 bg-primary" style={{ transform: "scaleX(0)" }}></div>
+      <BackgroundMarquee />
+      <div className="mx-auto max-w-7xl w-full flex-1 relative z-10 px-6">
+        <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
+          <div className="projects-header grid justify-between items-end mb-16 gap-4">
+            <div>
+              <h2 className="text-4xl md:text-6xl font-display tracking-tighter mb-4" style={{ perspective: "400px" }}>
+                <span className="projects-title-line block">SELECTED</span>
+                <span className="projects-title-line block text-muted-foreground">WORKS</span>
+              </h2>
+              <div className="projects-accent-line h-1 w-24 bg-primary" style={{ transform: "scaleX(0)" }}></div>
+            </div>
+            <p className="projects-desc text-muted-foreground max-w-sm text-left" style={{ opacity: 0 }}>
+              A collection of full-stack, AI-integrated, and production-ready
+              applications.
+            </p>
           </div>
-          <p className="projects-desc text-muted-foreground max-w-sm text-left" style={{ opacity: 0 }}>
-            A collection of full-stack, AI-integrated, and production-ready
-            applications.
-          </p>
-        </div>
 
-        <div className="projects-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-[repeat(3,auto)] gap-6" style={{ perspective: "1000px" }}>
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              className="project-card grid grid-rows-subgrid row-span-3"
-              style={{ opacity: 0 }}
-            >
-              <Card
-                className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 rounded-none overflow-hidden grid grid-rows-subgrid row-span-3 content-start items-start h-full"
+          <div className="projects-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-[repeat(3,auto)] gap-6" style={{ perspective: "1000px" }}>
+            {projects.map((project, index) => (
+              <div
+                key={index}
+                className="project-card grid grid-rows-subgrid row-span-3"
+                style={{ opacity: 0 }}
               >
+                <Card
+                  className="pt-0 group bg-card border-border hover:border-primary/50 transition-all duration-300 rounded-none overflow-hidden grid grid-rows-subgrid row-span-3 content-start items-start h-full"
+                >
                 <div className="overflow-hidden">
                   <ProjectImage src={project.image} alt={project.title} className="project-card-image" />
                 </div>
@@ -194,6 +193,7 @@ export function Projects() {
           ))}
         </div>
       </div>
-    </Container>
+      </div>
+    </section>
   );
 }

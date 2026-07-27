@@ -10,16 +10,24 @@ import { CONTACT_EMAIL } from "@/lib/portfolio-data";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
 import { ParticleNetwork } from "@/components/ui/particle-network";
 
-function getTerminalResponse(rawCommand: string) {
-  const cmd = rawCommand.trim().toLowerCase();
-  if (!cmd) return null;
-  if (cmd.includes("email") || cmd.includes("contact")) {
-    return `→ ${CONTACT_EMAIL}`;
-  }
-  if (cmd === "help") {
-    return "available: contact, help";
-  }
-  return `command not found: "${cmd}" — try 'contact'`;
+function TerminalResponse({ text }: { text: string }) {
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    if (!text || text === "...") {
+      setDisplayedText(text);
+      return;
+    }
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedText(text.slice(0, i));
+      i++;
+      if (i > text.length) clearInterval(interval);
+    }, 15);
+    return () => clearInterval(interval);
+  }, [text]);
+
+  return <span>{displayedText}</span>;
 }
 
 export function Hero() {
@@ -138,15 +146,82 @@ export function Hero() {
     return () => document.removeEventListener("keydown", handler);
   }, [heroVisible, terminalReady]);
 
-  const handleTerminalKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
-    const response = getTerminalResponse(terminalValue);
-    if (response === null) return;
-    setTerminalHistory((prev) => [
-      ...prev,
-      { command: terminalValue.trim(), response },
-    ]);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleTerminalKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter" || isProcessing) return;
+    
+    const cmd = terminalValue.trim();
+    if (!cmd) return;
+
+    if (cmd.toLowerCase() === "clear") {
+      setTerminalHistory([]);
+      setTerminalValue("");
+      return;
+    }
+
+    // Immediately push user command
+    setTerminalHistory((prev) => [...prev, { command: cmd, response: "" }]);
     setTerminalValue("");
+    setIsProcessing(true);
+
+    // Hardcoded instant responses
+    const lowerCmd = cmd.toLowerCase();
+    if (lowerCmd.includes("email") || lowerCmd.includes("contact")) {
+      setTerminalHistory((prev) => {
+        const newHist = [...prev];
+        newHist[newHist.length - 1].response = `→ ${CONTACT_EMAIL}`;
+        return newHist;
+      });
+      setIsProcessing(false);
+      return;
+    }
+    if (lowerCmd === "help") {
+      setTerminalHistory((prev) => {
+        const newHist = [...prev];
+        newHist[newHist.length - 1].response = "available: contact, help, clear — or ask Grok AI a question!";
+        return newHist;
+      });
+      setIsProcessing(false);
+      return;
+    }
+
+    // Ask Grok AI
+    try {
+      // Show loading indicator
+      setTerminalHistory((prev) => {
+        const newHist = [...prev];
+        newHist[newHist.length - 1].response = "...";
+        return newHist;
+      });
+
+      const res = await fetch("/api/groq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: cmd })
+      });
+      const data = await res.json();
+      
+      setTerminalHistory((prev) => {
+        const newHist = [...prev];
+        newHist[newHist.length - 1].response = data.response || "No response.";
+        return newHist;
+      });
+    } catch (err) {
+      setTerminalHistory((prev) => {
+        const newHist = [...prev];
+        newHist[newHist.length - 1].response = "Error connecting to AI.";
+        return newHist;
+      });
+    } finally {
+      setIsProcessing(false);
+      // Ensure input scrolls into view on update
+      setTimeout(() => {
+        if (terminalInputRef.current) {
+          terminalInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 50);
+    }
   };
 
   return (
@@ -351,18 +426,20 @@ export function Hero() {
               onClick={() => terminalInputRef.current?.focus()}
             >
               {terminalHistory.map((entry, i) => (
-                <div key={i} className="mb-4">
-                  <div className="flex items-center gap-0">
-                    <span className="text-primary">shaurya@dev</span>
-                    <span className="text-muted-foreground">:~$</span>{" "}&nbsp;
-                    <span className="text-foreground">{entry.command}</span>
-                  </div>
-                  <div className="text-primary">{entry.response}</div>
+              <div key={i} className="mb-4">
+                <div className="flex gap-2 text-muted-foreground">
+                  <span className="text-primary font-bold">visitor@shaurya:~$</span>
+                  <span>{entry.command}</span>
                 </div>
-              ))}
-              <div className="flex items-center gap-0">
-                <span className="text-primary shrink-0">shaurya@dev</span>
-                <span className="text-muted-foreground shrink-0">:~$</span>{" "}&nbsp;
+                {entry.response && (
+                  <div className="mt-1 text-foreground/90 whitespace-pre-wrap pl-2 border-l border-primary/30 ml-1">
+                    <TerminalResponse text={entry.response} />
+                  </div>
+                )}
+              </div>
+            ))}
+            <div className="flex gap-2 items-center text-muted-foreground">
+              <span className="text-primary font-bold shrink-0">visitor@shaurya:~$</span>
                 <div className="relative flex-1 min-h-[1em]">
                   <input
                     ref={terminalInputRef}
