@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Container } from "@/components/zippystarter/container";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
-import { InteractiveGrid } from "@/components/ui/interactive-grid";
+import { BackgroundMarquee } from "@/components/ui/background-marquee";
 
 export function Contact() {
   const [toast, setToast] = useState<{ visible: boolean; message: string }>({
@@ -93,9 +93,10 @@ export function Contact() {
   }, [gsapReady]);
 
   return (
-    <Container id="contact" className="py-24 bg-card border-t border-border relative overflow-hidden">
-      <InteractiveGrid />
-      <div ref={sectionRef} className="max-w-2xl justify-self-center relative z-10 pointer-events-none [&>*]:pointer-events-auto">
+    <section id="contact" className="py-24 bg-card border-t border-border relative overflow-hidden flex flex-col">
+      <BackgroundMarquee />
+      <div className="mx-auto max-w-7xl w-full px-6 flex-1 relative z-10">
+        <div ref={sectionRef} className="max-w-2xl mx-auto relative z-10 pointer-events-none [&>*]:pointer-events-auto">
         <div className="contact-header text-center mb-12" style={{ opacity: 0 }}>
           <h2 className="text-4xl font-display mb-4">INITIATE_CONTACT</h2>
           <p className="text-muted-foreground">
@@ -201,7 +202,8 @@ export function Contact() {
             </div>
           </div>
         )}
+        </div>
       </div>
-    </Container>
+    </section>
   );
 }

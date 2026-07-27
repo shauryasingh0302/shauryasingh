@@ -16,7 +16,7 @@ import { ProjectImage } from "@/components/project-image";
 import { projects } from "@/lib/portfolio-data";
 import Link from "next/link";
 import { useGsapReady } from "@/components/gsap/gsap-provider";
-import { BackgroundMarquee } from "@/components/ui/background-marquee";
+import { InteractiveGrid } from "@/components/ui/interactive-grid";
 
 export function Projects() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -41,7 +41,8 @@ export function Projects() {
           scrollTrigger: {
             trigger: ".projects-header",
             start: "top 85%",
-            once: true,
+            end: "bottom 15%",
+            toggleActions: "play reverse play reverse",
           },
         });
 
@@ -84,7 +85,8 @@ export function Projects() {
             scrollTrigger: {
               trigger: ".projects-grid",
               start: "top 85%",
-              once: true,
+              end: "bottom 15%",
+              toggleActions: "play reverse play reverse",
             },
           }
         );
@@ -121,7 +123,7 @@ export function Projects() {
       id="projects"
       className="py-32 border-t border-border relative overflow-hidden flex flex-col bg-background"
     >
-      <BackgroundMarquee />
+      <InteractiveGrid />
       <div className="mx-auto max-w-7xl w-full flex-1 relative z-10 px-6">
         <div ref={sectionRef} className="relative z-10 pointer-events-none [&>*]:pointer-events-auto">
           <div className="projects-header grid justify-between items-end mb-16 gap-4">

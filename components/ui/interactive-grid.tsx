@@ -22,15 +22,15 @@ export function InteractiveGrid({ className }: { className?: string }) {
     let height = 0;
 
     const isDark = resolvedTheme === "dark";
-    // Color of the dots
-    const baseColor = isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)";
-    const highlightColor = isDark ? "rgba(167, 243, 208, 0.8)" : "rgba(5, 150, 105, 0.8)";
+    // We will use the primary color's RGB values for all dots to keep it clean.
+    // The base dots will just have a very low opacity.
+    const rgb = isDark ? "167, 243, 208" : "5, 150, 105";
     
-    const spacing = 40; // spacing between dots
-    let dots: { x: number; y: number; baseX: number; baseY: number; size: number }[] = [];
+    const spacing = 30; // Denser grid
+    let dots: { x: number; y: number; baseX: number; baseY: number; size: number; alpha: number }[] = [];
 
-    const mouse = { x: -1000, y: -1000 };
-    const radius = 150; // radius of influence
+    const mouse = { x: -1000, y: -1000, currentX: -1000, currentY: -1000 };
+    const radius = 250; // Larger, softer radius of influence
 
     const init = () => {
       const rect = container.getBoundingClientRect();
@@ -48,6 +48,7 @@ export function InteractiveGrid({ className }: { className?: string }) {
             baseX: x,
             baseY: y,
             size: 1, // Base radius
+            alpha: 0.05, // Base alpha
           });
         }
       }
@@ -56,33 +57,34 @@ export function InteractiveGrid({ className }: { className?: string }) {
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
       
+      // Smooth mouse interpolation
+      mouse.currentX += (mouse.x - mouse.currentX) * 0.15;
+      mouse.currentY += (mouse.y - mouse.currentY) * 0.15;
+
       for (let i = 0; i < dots.length; i++) {
         const dot = dots[i];
         
-        const dx = mouse.x - dot.baseX;
-        const dy = mouse.y - dot.baseY;
+        const dx = mouse.currentX - dot.baseX;
+        const dy = mouse.currentY - dot.baseY;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        let targetX = dot.baseX;
         let targetSize = 1;
-        let color = baseColor;
+        let targetAlpha = 0.05;
 
-        if (distance < radius) {
-          const force = (radius - distance) / radius;
-          // Only glow and slightly scale, NO movement
-          targetSize = 1 + force * 2;
-          
-          // Interpolate color opacity for highlight
-          const alpha = 0.1 + force * 0.7;
-          color = isDark ? `rgba(167, 243, 208, ${alpha})` : `rgba(5, 150, 105, ${alpha})`;
+        if (distance < radius && mouse.x !== -1000) {
+          // Inverse square for smoother, natural light falloff
+          const force = Math.pow((radius - distance) / radius, 1.5);
+          targetSize = 1 + force * 2.5;
+          targetAlpha = 0.05 + force * 0.8;
         }
 
-        // Smooth interpolation for size only
-        dot.size += (targetSize - dot.size) * 0.1;
+        // Smooth interpolation for BOTH size and alpha (creates trailing effect)
+        dot.size += (targetSize - dot.size) * 0.15;
+        dot.alpha += (targetAlpha - dot.alpha) * 0.15;
 
         ctx.beginPath();
         ctx.arc(dot.baseX, dot.baseY, dot.size, 0, Math.PI * 2);
-        ctx.fillStyle = color;
+        ctx.fillStyle = `rgba(${rgb}, ${dot.alpha})`;
         ctx.fill();
       }
 

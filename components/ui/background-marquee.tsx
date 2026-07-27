@@ -9,10 +9,10 @@ export function BackgroundMarquee({ className }: { className?: string }) {
       )}
     >
       <div className="flex w-max animate-marquee font-display text-[12rem] md:text-[18rem] font-black leading-none tracking-tighter">
-        <span className="px-8">WORKS • PROJECTS • WORKS • PROJECTS • WORKS • PROJECTS • WORKS • PROJECTS •</span>
+        <span className="px-8">CONTACT • CONNECT • COLLABORATE • CONTACT • CONNECT • COLLABORATE • CONTACT • CONNECT • COLLABORATE •</span>
       </div>
       <div className="flex w-max animate-marquee-reverse font-display text-[12rem] md:text-[18rem] font-black leading-none tracking-tighter ml-[-50%]">
-        <span className="px-8">BUILD • CREATE • BUILD • CREATE • BUILD • CREATE • BUILD • CREATE •</span>
+        <span className="px-8">CONTACT • CONNECT • COLLABORATE • CONTACT • CONNECT • COLLABORATE • CONTACT • CONNECT • COLLABORATE •</span>
       </div>
     </div>
   );
