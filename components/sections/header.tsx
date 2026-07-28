@@ -63,7 +63,7 @@ export function Header({ setSearchOpen }: HeaderProps) {
         </MagneticButton>
         <MagneticButton strength={0.2}>
           <button
-            onClick={() => scrollTo("#blog")}
+            onClick={() => scrollTo("#logs")}
             className="hover:text-primary transition-colors block py-2"
           >
             Logs
@@ -151,7 +151,7 @@ export function Header({ setSearchOpen }: HeaderProps) {
               Skills
             </button>
             <button
-              onClick={() => scrollTo("#blog")}
+              onClick={() => scrollTo("#logs")}
               className="hover:text-primary transition-colors text-left py-2 border-b border-border/50"
             >
               Logs
