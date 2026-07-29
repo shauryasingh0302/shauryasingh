@@ -87,7 +87,7 @@ export function Header({ setSearchOpen }: HeaderProps) {
           >
             <Search className="size-3.5" />
             <span className="font-sans">Search</span>
-            <kbd className="inline-flex items-center gap-0.5 text-[10px] font-mono border border-border/70 rounded px-1 py-0.5 bg-background/50">
+            <kbd className="inline-flex items-center gap-0.5 text-[0.625rem] font-mono border border-border/70 rounded px-1 py-0.5 bg-background/50">
               <span>⌘</span>K
             </kbd>
           </button>

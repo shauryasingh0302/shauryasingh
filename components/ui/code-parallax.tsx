@@ -96,7 +96,7 @@ export function CodeParallax({ className }: { className?: string }) {
           ref={(el) => {
             snippetsRef.current[i] = el;
           }}
-          className="absolute text-[10px] md:text-xs font-mono leading-relaxed text-primary/60 dark:text-primary/50 whitespace-pre z-0 transition-opacity duration-1000"
+          className="absolute text-[0.625rem] md:text-xs font-mono leading-relaxed text-primary/60 dark:text-primary/50 whitespace-pre z-0 transition-opacity duration-1000"
           style={{
             top: snippet.top,
             left: snippet.left,

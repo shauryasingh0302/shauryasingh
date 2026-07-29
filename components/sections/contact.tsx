@@ -186,7 +186,7 @@ export function Contact() {
               id="message"
               name="message"
               placeholder="Enter your message..."
-              className="min-h-[150px] bg-background"
+              className="min-h-[9.375rem] bg-background"
               required
             />
           </div>

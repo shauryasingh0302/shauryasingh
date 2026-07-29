@@ -44,10 +44,10 @@ export function SearchOverlay({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search pages, writing, projects, talks…"
-            className="flex-1 bg-transparent border-none outline-none text-white text-[15px] placeholder:text-white/30 font-sans"
+            className="flex-1 bg-transparent border-none outline-none text-white text-[0.9375rem] placeholder:text-white/30 font-sans"
           />
           <kbd
-            className="inline-flex items-center font-mono cursor-pointer select-none px-2 py-0.5 rounded text-[11px]"
+            className="inline-flex items-center font-mono cursor-pointer select-none px-2 py-0.5 rounded text-[0.6875rem]"
             style={{ color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.05)" }}
             onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
           >
@@ -56,7 +56,7 @@ export function SearchOverlay({
         </div>
 
         {/* ── Results ── */}
-        <div className="overflow-y-auto" style={{ maxHeight: "520px" }}>
+        <div className="overflow-y-auto" style={{ maxHeight: "32.5rem" }}>
           {searchQuery.trim() && safeSections.every((s) => s.items.length === 0) ? (
             <div className="px-5 py-10 text-center text-sm font-mono" style={{ color: "rgba(255,255,255,0.25)" }}>
               No results for &ldquo;{searchQuery}&rdquo;
@@ -66,7 +66,7 @@ export function SearchOverlay({
               <div key={section.title}>
                 {/* Section header */}
                 <div
-                  className="px-5 pt-5 pb-2 text-[10px] font-mono tracking-widest uppercase"
+                  className="px-5 pt-5 pb-2 text-[0.625rem] font-mono tracking-widest uppercase"
                   style={{ color: "rgba(255,255,255,0.3)" }}
                 >
                   {section.title}
@@ -89,7 +89,7 @@ export function SearchOverlay({
                           document.getElementById(item.sectionId)?.scrollIntoView({ behavior: "smooth" });
                         }
                       }}
-                      className="w-full flex items-center justify-between px-5 py-3 text-left text-[16px] font-sans transition-colors"
+                      className="w-full flex items-center justify-between px-5 py-3 text-left text-base font-sans transition-colors"
                       style={{
                         background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
                         color: isActive ? "#fff" : "rgba(255,255,255,0.75)",
