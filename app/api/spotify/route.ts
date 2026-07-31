@@ -6,19 +6,16 @@ export const revalidate = 0; // Disable static caching
 export async function GET() {
   const response = await getNowPlaying();
 
-  if (!response || response.status === 204 || response.status > 400) {
-    // If not currently playing, try fetching recently played
+  // Helper to fetch and return recently played if nothing is currently playing
+  const returnRecentlyPlayed = async () => {
     const recentlyPlayedRes = await getRecentlyPlayed();
-    
     if (!recentlyPlayedRes || recentlyPlayedRes.status === 204 || recentlyPlayedRes.status > 400) {
       return NextResponse.json({ isPlaying: false });
     }
-    
     const recent = await recentlyPlayedRes.json();
     if (!recent.items || recent.items.length === 0) {
       return NextResponse.json({ isPlaying: false });
     }
-    
     const track = recent.items[0].track;
     return NextResponse.json({
       isPlaying: false,
@@ -27,12 +24,16 @@ export async function GET() {
       albumImageUrl: track.album.images[0].url,
       songUrl: track.external_urls.spotify,
     });
+  };
+
+  if (!response || response.status === 204 || response.status > 400) {
+    return await returnRecentlyPlayed();
   }
 
   const song = await response.json();
 
   if (song.item === null) {
-    return NextResponse.json({ isPlaying: false });
+    return await returnRecentlyPlayed();
   }
 
   const isPlaying = song.is_playing;

@@ -14,11 +14,13 @@ export type Skill = {
   icon: string;
   invertDark?: boolean;
   customSvg?: boolean;
+  isLucide?: boolean;
 };
 
 export type SkillGroup = {
   category: string;
   items: Skill[];
+  isLearning?: boolean;
 };
 
 export type BlogPost = {
@@ -71,36 +73,61 @@ export const skills: SkillGroup[] = [
   {
     category: "Frontend",
     items: [
-      { name: "React.js",     icon: "react" },
-      { name: "Next.js",      icon: "nextdotjs",   invertDark: true },
-      { name: "TypeScript",   icon: "typescript" },
-      { name: "Tailwind CSS", icon: "tailwindcss" },
-      { name: "HTML/CSS",     icon: "html5" },
+      { name: "React.js",          icon: "react" },
+      { name: "Next.js",           icon: "nextdotjs",   invertDark: true },
+      { name: "TypeScript",        icon: "typescript" },
+      { name: "JavaScript (ES6+)", icon: "javascript" },
+      { name: "Tailwind CSS",      icon: "tailwindcss" },
+      { name: "Framer Motion",     icon: "framer",      invertDark: true },
+      { name: "React Query",       icon: "reactquery" },
+      { name: "Shadcn/UI",         icon: "shadcnui",    invertDark: true },
+      { name: "HTML5",             icon: "html5" },
+      { name: "CSS3",              icon: "Palette",     isLucide: true },
     ],
   },
   {
-    category: "Backend",
+    category: "Backend & AI",
     items: [
-      { name: "Node.js",     icon: "nodedotjs" },
-      { name: "Express.js",  icon: "express",   invertDark: true },
-      { name: "REST APIs",   icon: "fastapi" },
-      { name: "MongoDB",     icon: "mongodb" },
-      { name: "PostgreSQL",  icon: "postgresql" },
+      { name: "Node.js",           icon: "nodedotjs" },
+      { name: "Express.js",        icon: "express",     invertDark: true },
+      { name: "REST APIs",         icon: "Network",     isLucide: true },
+      { name: "WebSockets",        icon: "socketdotio", invertDark: true },
+      { name: "JWT Auth",          icon: "jsonwebtokens", invertDark: true },
+      { name: "LangChain",         icon: "langchain",   invertDark: true },
+      { name: "Gemini API",        icon: "googlegemini" },
+      { name: "Groq",              icon: "Cpu",         isLucide: true },
+      { name: "Pinecone",          icon: "pinecone",    customSvg: true },
+      { name: "RAG",               icon: "FileSearch",  isLucide: true },
+      { name: "Vercel AI SDK",     icon: "vercel",      invertDark: true },
     ],
   },
   {
-    category: "Tools",
+    category: "Databases & Tools",
     items: [
-      { name: "Git",                  icon: "git" },
-      { name: "GitHub",               icon: "github",   invertDark: true },
-      { name: "Postman",              icon: "postman" },
-      { name: "LangChain",            icon: "langchain" },
-      { name: "Pinecone (Vector DB)", icon: "pinecone", customSvg: true },
+      { name: "PostgreSQL",        icon: "postgresql" },
+      { name: "MongoDB",           icon: "mongodb" },
+      { name: "Prisma ORM",        icon: "prisma",      invertDark: true },
+      { name: "Drizzle ORM",       icon: "drizzle" },
+      { name: "Supabase",          icon: "supabase" },
+      { name: "Neon",              icon: "neon" },
+      { name: "Render",            icon: "Box",         isLucide: true },
+      { name: "Vercel",            icon: "vercel",      invertDark: true },
+      { name: "Clerk",             icon: "clerk",       invertDark: true },
+      { name: "Git",               icon: "git" },
+      { name: "GitHub",            icon: "github",      invertDark: true },
+      { name: "Postman",           icon: "postman" },
     ],
   },
 ];
 
 export const blogPosts: BlogPost[] = [
+  {
+    title: "Developer & Product Manager Intern — SPACENOS",
+    date: "July 2026 – Present",
+    readTime: "Work Experience",
+    excerpt:
+      "Recently joined — learning the ropes across development and product strategy.",
+  },
   {
     title: "Smart India Hackathon 2025 — National Winner",
     date: "2025",
