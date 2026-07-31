@@ -200,8 +200,11 @@ export function Dashboard() {
                 <div className="flex items-center justify-between mb-6 relative z-10">
                   <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2">
                     <Code2 className="size-4" /> 
-                    WEEKLY CODING
+                    ALL-TIME CODING
                   </h3>
+                  <span className="text-[10px] text-muted-foreground font-mono hidden sm:inline-block">
+                    since 1 Aug 2026
+                  </span>
                 </div>
                 
                 <div className="relative z-10">

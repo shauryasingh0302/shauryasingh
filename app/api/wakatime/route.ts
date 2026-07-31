@@ -12,7 +12,7 @@ export async function GET() {
   const base64ApiKey = Buffer.from(api_key).toString('base64');
 
   try {
-    const response = await fetch("https://wakatime.com/api/v1/users/current/stats/last_7_days", {
+    const response = await fetch("https://wakapi.dev/api/compat/wakatime/v1/users/current/stats/all_time", {
       headers: {
         Authorization: `Basic ${base64ApiKey}`,
       },

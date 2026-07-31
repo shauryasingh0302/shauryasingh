@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Sun, Moon, Menu, X } from "lucide-react";
+import useSWR from "swr";
+import { Search, Sun, Moon, Menu, X, Eye } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Container } from "@/components/zippystarter/container";
 import { MagneticButton } from "@/components/ui/magnetic-button";
@@ -11,9 +12,12 @@ interface HeaderProps {
   setSearchOpen: (open: boolean) => void;
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export function Header({ setSearchOpen }: HeaderProps) {
   const { theme, setTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: analytics } = useSWR("/api/views", fetcher, { revalidateOnFocus: false });
 
   const scrollTo = (target: string) => {
     if (typeof window !== 'undefined') {
@@ -101,6 +105,20 @@ export function Header({ setSearchOpen }: HeaderProps) {
             <Search className="size-4" />
           </button>
         </MagneticButton>
+
+        {/* Minimalistic Views Counter */}
+        {analytics && !analytics.error && (
+          <MagneticButton strength={0.2}>
+            <div
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-border bg-muted/20 text-muted-foreground transition-all text-xs font-mono"
+              title="Total Portfolio Views"
+            >
+              <Eye className="size-3.5" />
+              <span>{analytics.views.toLocaleString()}</span>
+            </div>
+          </MagneticButton>
+        )}
+
         <MagneticButton strength={0.2}>
           <AnimatedThemeToggler
             theme={theme as "light" | "dark"}
