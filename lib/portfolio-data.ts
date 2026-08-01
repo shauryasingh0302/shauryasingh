@@ -156,6 +156,7 @@ export type SearchItem = {
   sectionId?: string;
   href?: string;
   category: string;
+  keywords?: string[];
 };
 
 export const defaultSections: { title: string; items: SearchItem[] }[] = [
@@ -180,9 +181,24 @@ export const defaultSections: { title: string; items: SearchItem[] }[] = [
 ];
 
 export const allSearchItems: SearchItem[] = [
-  ...projects.map((p) => ({ label: p.title, sectionId: "projects", category: "Projects" })),
-  ...skills.map((s)   => ({ label: s.category, sectionId: "skills",   category: "Skills"   })),
-  ...blogPosts.map((p) => ({ label: p.title, sectionId: "blog",      category: "Logs"     })),
+  ...projects.map((p) => ({ 
+    label: p.title, 
+    sectionId: "projects", 
+    category: "Projects",
+    keywords: [...p.tags, p.description],
+  })),
+  ...skills.map((s)   => ({ 
+    label: s.category, 
+    sectionId: "skills",   
+    category: "Skills",
+    keywords: s.items.map(i => i.name),
+  })),
+  ...blogPosts.map((p) => ({ 
+    label: p.title, 
+    sectionId: "blog",      
+    category: "Logs",
+    keywords: [p.excerpt, p.readTime],
+  })),
   { label: "Home",     sectionId: "hero",     category: "Pages" },
   { label: "Projects", sectionId: "projects", category: "Pages" },
   { label: "Skills",   sectionId: "skills",   category: "Pages" },

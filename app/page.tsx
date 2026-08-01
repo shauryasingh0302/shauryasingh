@@ -32,9 +32,13 @@ export default function Home() {
   };
 
   const filteredItems: SearchItem[] = searchQuery.trim()
-    ? allSearchItems.filter((item) =>
-        item.label.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? allSearchItems.filter((item) => {
+        const q = searchQuery.toLowerCase();
+        if (item.label.toLowerCase().includes(q)) return true;
+        if (item.category.toLowerCase().includes(q)) return true;
+        if (item.keywords?.some((k) => k.toLowerCase().includes(q))) return true;
+        return false;
+      })
     : [];
 
   const filteredSections: { title: string; items: SearchItem[] }[] = [];
@@ -46,6 +50,20 @@ export default function Home() {
 
   const activeSections = searchQuery.trim() ? filteredSections : defaultSections;
   const flatItems: SearchItem[] = activeSections.flatMap((s) => s.items);
+
+  useEffect(() => {
+    if (searchOpen) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
+    }
+    return () => { 
+      document.body.style.overflow = "unset"; 
+      document.documentElement.style.overflow = "unset";
+    };
+  }, [searchOpen]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
