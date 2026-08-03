@@ -1,31 +1,55 @@
 # Shaurya Singh — Portfolio
 
-Personal portfolio built with [Next.js](https://nextjs.org) and [shadcn](https://ui.shadcn.com).
+A modern portfolio website built with Next.js, TypeScript, Tailwind CSS, and shadcn/ui. It showcases projects, skills, contact information, and interactive UI elements in a polished single-page experience.
 
-## Stack
+## Features
 
-- **Framework:** Next.js 16 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS v4 + tw-animate-css
-- **UI:** shadcn/ui (Radix primitives, class-variance-authority)
-- **Icons:** Lucide React
-- **Fonts:** Space Grotesk (body), JetBrains Mono (code/monospace)
-- **Theming:** next-themes (dark/light/system)
+- Responsive portfolio layout
+- Animated sections and visual effects
+- Project showcase and skills section
+- Contact form API route
+- Dark/light theme support
+- Optimized for modern browsers
+
+## Tech Stack
+
+- Framework: Next.js 16
+- Language: TypeScript
+- Styling: Tailwind CSS v4
+- UI: shadcn/ui + Radix UI primitives
+- Animation: Framer Motion, GSAP, Lenis
+- Icons: Lucide React
 
 ## Getting Started
 
-```bash
-npm install
-npm run dev
-```
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+3. Open http://localhost:3000 in your browser.
 
-Opens at [http://localhost:3002](http://localhost:3002).
+## Available Scripts
 
-## Scripts
+| Script | Description |
+| ------ | ----------- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run ESLint |
+| `npm run format` | Format the project with Prettier |
+| `npm run format:check` | Check formatting |
 
-| Command           | Description              |
-| ----------------- | ------------------------ |
-| `npm run dev`     | Start dev server (3002)  |
-| `npm run build`   | Production build         |
-| `npm run lint`    | Run ESLint               |
-| `npm run format`  | Format with Prettier     |
+## Project Structure
+
+- `app/` — App Router pages and API routes
+- `components/` — Reusable UI and section components
+- `lib/` — Portfolio data and helper modules
+- `public/` — Static assets and resume files
+
+## License
+
+This project is licensed under the MIT License.
