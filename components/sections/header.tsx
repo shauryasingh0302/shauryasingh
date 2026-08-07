@@ -132,12 +132,12 @@ export function Header({ setSearchOpen }: HeaderProps) {
         </MagneticButton>
         <MagneticButton strength={0.2}>
           <a
-            href="/resume/shaurya_resume_04.pdf"
+            href="/resume"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-3 sm:px-4 py-1.5 rounded-lg font-mono text-xs tracking-wider uppercase text-foreground dark:text-white transition-colors bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/15 hover:bg-foreground/10 dark:hover:bg-white/10"
           >
-            <span className="hidden sm:inline">shaurya_resume_04.pdf</span>
+            <span className="hidden sm:inline">SHAURYA_RESUME_05.PDF</span>
             <span className="sm:hidden">RESUME</span>
           </a>
         </MagneticButton>
