@@ -23,7 +23,7 @@ const siteUrl =
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : "http://localhost:3000";
 
-const title = "Shaurya Singh — Full-Stack Developer & AI Engineer";
+const title = "Shaurya Singh";
 const description =
   "Shaurya Singh is a full-stack developer and AI engineer specialising in Next.js, React, Node.js, and LLM-powered applications. Smart India Hackathon 2025 national winner. Explore projects, skills, and get in touch.";
 

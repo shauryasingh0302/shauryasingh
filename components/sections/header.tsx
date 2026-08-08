@@ -137,10 +137,7 @@ export function Header({ setSearchOpen }: HeaderProps) {
             rel="noopener noreferrer"
             className="inline-flex items-center px-3 sm:px-4 py-1.5 rounded-lg font-mono text-xs tracking-wider uppercase text-foreground dark:text-white transition-colors bg-foreground/5 dark:bg-white/5 border border-foreground/10 dark:border-white/15 hover:bg-foreground/10 dark:hover:bg-white/10"
           >
-            <span className="hidden sm:inline">
-              {process.env.NEXT_PUBLIC_RESUME_FILE?.toUpperCase()}
-            </span>
-            <span className="sm:hidden">RESUME</span>
+            RESUME
           </a>
         </MagneticButton>
         <MagneticButton strength={0.2}>
