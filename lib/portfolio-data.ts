@@ -32,31 +32,22 @@ export type BlogPost = {
 
 export const projects: Project[] = [
   {
-    title: "Navjivan",
-    description:
-      "AI-powered smoking cessation & wellness platform. Memory-augmented goal engine using Pinecone vector embeddings and an agentic AI coach for personalized fitness and cessation plans. Winner, Smart India Hackathon 2025.",
-    tags: ["React Native", "Expo", "TypeScript", "Node.js", "Pinecone"],
-    image: "/images/projects/project-placeholder-1.jpg",
-    link: "#",
-    repo: "https://www.github.com/shauryasingh0302/navjivan",
-  },
-  {
-    title: "ChatPDF",
-    description:
-      "Full-stack Retrieval-Augmented Generation (RAG) app for natural language querying over uploaded PDFs, powered by LangChain, Pinecone, and Google Gemini.",
-    tags: ["Next.js", "LangChain", "Pinecone", "Gemini API", "Supabase"],
-    image: "/images/projects/project-placeholder-2.jpg",
-    link: "https://chatpdf-fojl.onrender.com",
-    repo: "https://www.github.com/shauryasingh0302/chatpdf",
-  },
-  {
-    title: "Cypress",
+    title: "Slate",
     description:
       "Real-time collaborative workspace SaaS with live multi-user co-editing, cursors, nested workspaces, a custom rich text editor, and subscription billing.",
     tags: ["Next.js", "WebSockets", "Drizzle ORM", "Clerk"],
     image: "/images/projects/project-placeholder-3.jpg",
-    link: "https://cypress-zsjp.onrender.com",
-    repo: "https://www.github.com/shauryasingh0302/cypress",
+    link: "https://slate.shauryasingh.dev",
+    repo: "https://www.github.com/shauryasingh0302/slate",
+  },
+  {
+    title: "Kortex",
+    description:
+      "Full-stack Retrieval-Augmented Generation (RAG) app for natural language querying over uploaded PDFs, powered by LangChain, Pinecone, and Google Gemini.",
+    tags: ["Next.js", "LangChain", "Pinecone", "Gemini API", "Supabase"],
+    image: "/images/projects/project-placeholder-2.jpg",
+    link: "https://kortex.shauryasingh.dev",
+    repo: "https://www.github.com/shauryasingh0302/kortex",
   },
   {
     title: "ExecOS",
@@ -64,8 +55,17 @@ export const projects: Project[] = [
       "Autonomous AI executive assistant that reads unread emails on a schedule, understands intent via an LLM, and acts on the user's behalf — drafting replies, extracting tasks, and creating calendar events.",
     tags: ["Vercel AI SDK", "Groq", "Drizzle ORM", "Neon Postgres"],
     image: "/images/projects/project-placeholder-4.jpg",
-    link: "https://execos-nsjw.onrender.com",
+    link: "https://execos.shauryasingh.dev",
     repo: "https://www.github.com/shauryasingh0302/execos",
+  },
+  {
+    title: "Navjivan",
+    description:
+      "AI-powered smoking cessation & wellness platform. Memory-augmented goal engine using Pinecone vector embeddings and an agentic AI coach for personalized fitness and cessation plans. Winner, Smart India Hackathon 2025.",
+    tags: ["React Native", "Expo", "TypeScript", "Node.js", "Pinecone"],
+    image: "/images/projects/navjivan.svg",
+    link: "#",
+    repo: "https://www.github.com/shauryasingh0302/navjivan",
   },
 ];
 
@@ -166,7 +166,7 @@ export const defaultSections: { title: string; items: SearchItem[] }[] = [
       { label: "Home",     sectionId: "hero",     category: "Pages" },
       { label: "Projects", sectionId: "projects", category: "Pages" },
       { label: "Skills",   sectionId: "skills",   category: "Pages" },
-      { label: "Logs",     sectionId: "blog",     category: "Pages" },
+      { label: "Experience", sectionId: "logs", category: "Pages" },
       { label: "Contact",  sectionId: "contact",  category: "Pages" },
     ],
   },
@@ -195,14 +195,14 @@ export const allSearchItems: SearchItem[] = [
   })),
   ...blogPosts.map((p) => ({ 
     label: p.title, 
-    sectionId: "blog",      
-    category: "Logs",
+    sectionId: "logs",      
+    category: "Experience",
     keywords: [p.excerpt, p.readTime],
   })),
   { label: "Home",     sectionId: "hero",     category: "Pages" },
   { label: "Projects", sectionId: "projects", category: "Pages" },
   { label: "Skills",   sectionId: "skills",   category: "Pages" },
-  { label: "Logs",     sectionId: "blog",     category: "Pages" },
+  { label: "Experience", sectionId: "logs", category: "Pages" },
   { label: "Contact",  sectionId: "contact",  category: "Pages" },
   { label: "GitHub",   href: "https://github.com/shauryasingh0302",      category: "Elsewhere" },
   { label: "LinkedIn", href: "https://linkedin.com/in/shauryasingh0302", category: "Elsewhere" },

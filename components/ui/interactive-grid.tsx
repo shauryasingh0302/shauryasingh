@@ -57,6 +57,7 @@ export function InteractiveGrid({ className }: { className?: string }) {
     };
 
     const draw = () => {
+      updateMousePosition();
       ctx.clearRect(0, 0, width, height);
       
       const time = Date.now() * 0.001;
@@ -108,22 +109,20 @@ export function InteractiveGrid({ className }: { className?: string }) {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    const updateMousePosition = () => {
-      if (mouse.clientX === -1000) return;
+    // Reading layout here would force a synchronous reflow on every
+    // pointer/scroll event; the frame loop calls this once per frame instead.
+    function updateMousePosition() {
+      if (!canvas || mouse.clientX === -1000) return;
       const rect = canvas.getBoundingClientRect();
       mouse.x = mouse.clientX - rect.left;
       mouse.y = mouse.clientY - rect.top;
-    };
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       mouse.clientX = e.clientX;
       mouse.clientY = e.clientY;
-      updateMousePosition();
     };
     
-    const handleScroll = () => {
-      updateMousePosition();
-    };
     
     const handleMouseLeave = () => {
       mouse.x = -1000;
@@ -155,14 +154,12 @@ export function InteractiveGrid({ className }: { className?: string }) {
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };

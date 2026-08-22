@@ -161,14 +161,20 @@ export function Projects() {
                   </CardContent>
                 </div>
                 <CardFooter className="flex justify-between pt-0">
-                  <Link
-                    href={project.link}
-                    className="text-sm font-display flex items-center hover:text-primary transition-colors gap-2"
-                  >
-                    LIVE DEMO <ExternalLink className="size-3" />
-                  </Link>
+                  {project.link && project.link !== "#" && (
+                    <Link
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-display flex items-center hover:text-primary transition-colors gap-2"
+                    >
+                      LIVE DEMO <ExternalLink className="size-3" />
+                    </Link>
+                  )}
                   <Link
                     href={project.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm font-display flex items-center hover:text-primary transition-colors gap-2"
                   >
                     CODE <Github className="size-3" />

@@ -13,6 +13,8 @@ export function ProjectImage({ src, alt, className }: ProjectImageProps) {
     <img
       src={src}
       alt={alt}
+      loading="lazy"
+      decoding="async"
       className={cn(
         "w-full h-auto block border-b border-border bg-muted",
         className

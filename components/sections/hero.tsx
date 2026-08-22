@@ -146,7 +146,7 @@ export function Hero() {
     );
     observer.observe(el);
     // Wait for the boot sequence animation to finish before showing the interactive prompt
-    const timer = setTimeout(() => setTerminalReady(true), 6000);
+    const timer = setTimeout(() => setTerminalReady(true), 4500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -293,7 +293,7 @@ export function Hero() {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <div className="relative w-[100vw] h-[100vh] bg-background overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-[url('/hero-bg.jpg')] before:absolute before:inset-0 before:bg-primary before:mix-blend-color before:opacity-30 dark:before:opacity-100" />
+          <div className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-none dark:bg-[url('/hero-bg.jpg')] before:absolute before:inset-0 before:bg-primary before:mix-blend-color before:opacity-0 dark:before:opacity-100" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
         <ParticleNetwork />
@@ -461,7 +461,7 @@ export function Hero() {
               className="term-line mb-4 pl-0 text-primary"
               style={{ animationDelay: "5.0s" }}
             >
-              navjivan/&nbsp;&nbsp;chatpdf/&nbsp;&nbsp;cypress/&nbsp;&nbsp;execos/
+              slate/&nbsp;&nbsp;kortex/&nbsp;&nbsp;execos/&nbsp;&nbsp;navjivan/
             </div>
 
             <div

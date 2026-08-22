@@ -22,14 +22,25 @@ export function AnimatedGrid({ className }: { className?: string }) {
       container.style.setProperty("--mouse-y", `${y}px`);
     };
 
+    // Coalesce to one layout read + style write per frame. Firing these on
+    // every event thrashed layout, and the mask only repaints per frame anyway.
+    let rafId = 0;
+    const scheduleUpdate = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        updateMousePosition();
+      });
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      updateMousePosition();
+      scheduleUpdate();
     };
 
     const handleScroll = () => {
-      updateMousePosition();
+      scheduleUpdate();
     };
 
     const handleMouseLeave = () => {
@@ -50,6 +61,7 @@ export function AnimatedGrid({ className }: { className?: string }) {
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);

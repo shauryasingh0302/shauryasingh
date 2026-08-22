@@ -25,10 +25,10 @@ Achievements:
 - Smart India Hackathon 2025 Winner (National Level) for 'Navjivan', an AI-powered smoking cessation platform.
 
 Projects:
-1. Navjivan (SIH 2025 Winner) - AI Smoking Cessation & Wellness Platform (React Native, Node.js, Pinecone, Gemini).
-2. ChatPDF - AI-Powered Document Chat Platform (RAG, LangChain, Pinecone, Gemini API, Next.js, Supabase).
-3. Cypress - Real-Time Collaborative Workspace SaaS (WebSockets, Next.js, Drizzle ORM, Clerk).
-4. ExecOS - Autonomous AI Executive Assistant (Vercel AI SDK, Groq, Google APIs, Drizzle ORM).
+1. Slate - Real-Time Collaborative Workspace SaaS (WebSockets, Next.js, Drizzle ORM, Clerk).
+2. Kortex - AI-Powered Document Chat Platform (RAG, LangChain, Pinecone, Gemini API, Next.js, Supabase).
+3. ExecOS - Autonomous AI Executive Assistant (Vercel AI SDK, Groq, Google APIs, Drizzle ORM).
+4. Navjivan (SIH 2025 Winner) - AI Smoking Cessation & Wellness Platform (React Native, Node.js, Pinecone, Gemini).
 
 Skills:
 - Languages: Java, JavaScript (ES6+), TypeScript, SQL
@@ -78,20 +78,28 @@ export async function POST(req: Request) {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'openai/gpt-oss-20b',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
         ],
         temperature: 0.7,
-        max_tokens: 60,
+        // reasoning tokens count toward the completion budget, so keep effort low
+        // and leave headroom — the system prompt is what enforces brevity
+        reasoning_effort: 'low',
+        max_tokens: 200,
       })
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Groq API Error:", errorText);
-      return NextResponse.json({ response: `API Error: ${response.statusText}` });
+      console.error("Groq API Error:", response.status, errorText);
+      let detail = response.statusText || `HTTP ${response.status}`;
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed?.error?.message) detail = parsed.error.message;
+      } catch {}
+      return NextResponse.json({ response: `API Error: ${detail}` });
     }
 
     const data = await response.json();

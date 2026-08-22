@@ -37,6 +37,7 @@ export function InteractiveAurora({ className }: { className?: string }) {
     };
 
     const draw = () => {
+      updateMousePosition();
       ctx.clearRect(0, 0, width, height);
       
       time += 0.005;
@@ -112,30 +113,27 @@ export function InteractiveAurora({ className }: { className?: string }) {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    const updateMousePosition = () => {
-      if (mouse.clientX === -1000) return;
+    // Reading layout here would force a synchronous reflow on every
+    // pointer/scroll event; the frame loop calls this once per frame instead.
+    function updateMousePosition() {
+      if (!canvas || mouse.clientX === -1000) return;
       const rect = canvas.getBoundingClientRect();
       mouse.x = mouse.clientX - rect.left;
       mouse.y = mouse.clientY - rect.top;
-    };
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       mouse.clientX = e.clientX;
       mouse.clientY = e.clientY;
-      updateMousePosition();
     };
 
     const handleTouch = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         mouse.clientX = e.touches[0].clientX;
         mouse.clientY = e.touches[0].clientY;
-        updateMousePosition();
       }
     };
 
-    const handleScroll = () => {
-      updateMousePosition();
-    };
     
     const handleMouseLeave = () => {
       mouse.x = -1000;
@@ -170,7 +168,6 @@ export function InteractiveAurora({ className }: { className?: string }) {
     window.addEventListener("touchstart", handleTouch, { passive: true });
     window.addEventListener("touchmove", handleTouch, { passive: true });
     window.addEventListener("touchend", handleMouseLeave);
-    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
@@ -180,7 +177,6 @@ export function InteractiveAurora({ className }: { className?: string }) {
       window.removeEventListener("touchstart", handleTouch);
       window.removeEventListener("touchmove", handleTouch);
       window.removeEventListener("touchend", handleMouseLeave);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };

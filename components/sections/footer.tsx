@@ -16,6 +16,8 @@ export function Footer() {
           <MagneticButton strength={0.2}>
             <Link
               href="https://github.com/shauryasingh0302"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-primary transition-colors block py-2"
             >
               GITHUB
@@ -24,6 +26,8 @@ export function Footer() {
           <MagneticButton strength={0.2}>
             <Link
               href="https://linkedin.com/in/shauryasingh0302"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-primary transition-colors block py-2"
             >
               LINKEDIN
