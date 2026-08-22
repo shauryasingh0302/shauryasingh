@@ -54,10 +54,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Shaurya Singh", url: siteUrl }],
   creator: "Shaurya Singh",
   publisher: "Shaurya Singh",
-  icons: [
-    { rel: "icon", url: "/favicon.png", type: "image/png" },
-    { rel: "apple-touch-icon", url: "/favicon.png" },
-  ],
+  // Icons are generated from app/icon.png and app/apple-icon.png
   openGraph: {
     type: "website",
     locale: "en_US",
