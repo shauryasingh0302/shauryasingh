@@ -64,15 +64,17 @@ export function InteractiveGrid({ className }: { className?: string }) {
       
       const isMobile = window.innerWidth < 768;
       
-      if (isMobile) {
-        // Always lock to middle-right of the screen (viewport), not the section
-        const rect = container.getBoundingClientRect();
-        mouse.x = width * 0.85;
-        mouse.y = (window.innerHeight / 2) - rect.top;
-      } else if (mouse.clientX === -1000) {
-        // Subtle ambient movement on desktop if no interaction
-        mouse.x = width / 2 + Math.sin(time * 0.5) * width * 0.3;
-        mouse.y = height / 2 + Math.cos(time * 0.3) * height * 0.3;
+      if (mouse.clientX === -1000) {
+        if (isMobile) {
+          // Always lock to middle-right of the screen (viewport), not the section as a fallback
+          const rect = container.getBoundingClientRect();
+          mouse.x = width * 0.85;
+          mouse.y = (window.innerHeight / 2) - rect.top;
+        } else {
+          // Subtle ambient movement on desktop if no interaction
+          mouse.x = width / 2 + Math.sin(time * 0.5) * width * 0.3;
+          mouse.y = height / 2 + Math.cos(time * 0.3) * height * 0.3;
+        }
       }
       
       // Smooth mouse interpolation
@@ -131,9 +133,9 @@ export function InteractiveGrid({ className }: { className?: string }) {
       mouse.clientY = -1000;
     };
 
-    const handleResize = () => {
+    const resizeObserver = new ResizeObserver(() => {
       init();
-    };
+    });
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -151,14 +153,14 @@ export function InteractiveGrid({ className }: { className?: string }) {
 
     init();
     observer.observe(container);
+    resizeObserver.observe(container);
 
-    window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);

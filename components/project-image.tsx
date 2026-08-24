@@ -16,7 +16,7 @@ export function ProjectImage({ src, alt, className }: ProjectImageProps) {
       loading="lazy"
       decoding="async"
       className={cn(
-        "w-full h-auto block border-b border-border bg-muted",
+        "w-full aspect-video object-cover block border-b border-border bg-muted",
         className
       )}
     />

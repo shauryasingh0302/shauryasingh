@@ -17,6 +17,10 @@ export function GsapProvider({ children }: { children: ReactNode }) {
         const gsap = (await import("gsap")).default;
         const { ScrollTrigger } = await import("gsap/ScrollTrigger");
         gsap.registerPlugin(ScrollTrigger);
+        
+        // Prevent GSAP from recalculating on mobile when the URL bar hides/shows
+        ScrollTrigger.config({ ignoreMobileResize: true });
+        
         setReady(true);
       } catch (err: any) {
         console.error("GSAP Initialization Error:", err);
