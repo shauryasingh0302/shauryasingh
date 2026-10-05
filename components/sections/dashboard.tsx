@@ -9,8 +9,15 @@ import { useTheme } from "next-themes";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+// Static sample content for the music card; no Spotify account is required.
+const sampleTrack = {
+  title: "Starboy",
+  artist: "The Weeknd, Daft Punk",
+  albumImageUrl: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e024718e2b124f79258be7bc452",
+  songUrl: "https://open.spotify.com/track/7MXVkk9YMctZqd1Srtv4MB",
+};
+
 export function Dashboard() {
-  const { data: spotify } = useSWR("/api/spotify", fetcher, { refreshInterval: 10000 });
   const { data: wakatime } = useSWR("/api/wakatime", fetcher, { refreshInterval: 60000 });
   const sectionRef = useRef<HTMLDivElement>(null);
   const githubScrollRef = useRef<HTMLDivElement>(null);
@@ -154,45 +161,29 @@ export function Dashboard() {
 
           <div className="dashboard-grid grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             <div className="md:col-span-1 flex flex-col gap-4 sm:gap-6">
-              {/* Spotify Card */}
+              {/* Sample music card */}
               <div className="dashboard-card border border-border/50 bg-card/30 backdrop-blur-sm p-4 sm:p-6 relative overflow-hidden group hover:bg-card/40 transition-colors" style={{ opacity: 0 }}>
                 <div className="flex items-center justify-between mb-6 relative z-10">
                   <h3 className="font-mono text-sm text-muted-foreground flex items-center gap-2">
                     <Music className="size-4" /> 
-                    {spotify?.isPlaying ? "NOW PLAYING" : "RECENTLY PLAYED"}
+                    RECENTLY PLAYED
                   </h3>
-                  {spotify?.isPlaying && (
-                    <div className="flex gap-1 items-end h-4">
-                      <div className="w-1 bg-primary animate-[bounce_1s_infinite] h-full"></div>
-                      <div className="w-1 bg-primary animate-[bounce_1s_infinite_0.2s] h-2/3"></div>
-                      <div className="w-1 bg-primary animate-[bounce_1s_infinite_0.4s] h-full"></div>
-                    </div>
-                  )}
                 </div>
 
-                {spotify?.title ? (
-                  <a href={spotify.songUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 relative z-10 group-hover:opacity-80 transition-opacity">
-                    {spotify.albumImageUrl && (
-                      <img src={spotify.albumImageUrl} alt="Album Art" className="size-12 sm:size-16 object-cover border border-border/50 shadow-lg" />
-                    )}
-                    <div className="flex flex-col">
-                      <span className="font-bold text-base sm:text-lg truncate max-w-[150px] sm:max-w-[180px] leading-tight">{spotify.title}</span>
-                      <span className="text-xs sm:text-sm text-muted-foreground truncate max-w-[150px] sm:max-w-[180px]">{spotify.artist}</span>
-                    </div>
-                  </a>
-                ) : (
-                  <div className="flex items-center gap-4 relative z-10 opacity-50">
-                    <div className="size-12 sm:size-16 bg-muted/20 border border-border/50"></div>
-                    <div className="flex flex-col gap-2">
-                      <div className="h-4 w-24 bg-muted/20"></div>
-                      <div className="h-3 w-16 bg-muted/20"></div>
-                    </div>
+                <a href={sampleTrack.songUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 relative z-10 hover:opacity-80 transition-opacity">
+                  <img
+                    src={sampleTrack.albumImageUrl}
+                    alt="Starboy album cover"
+                    width={64}
+                    height={64}
+                    className="size-12 sm:size-16 shrink-0 object-cover border border-border/50 shadow-lg"
+                  />
+                  <div className="flex min-w-0 flex-col">
+                    <span className="font-bold text-base sm:text-lg truncate leading-tight">{sampleTrack.title}</span>
+                    <span className="text-xs sm:text-sm text-muted-foreground truncate">{sampleTrack.artist}</span>
                   </div>
-                )}
-                {/* Background ambient glow based on spotify presence */}
-                {spotify?.isPlaying && (
-                  <div className="absolute -top-10 -right-10 size-40 bg-primary/10 rounded-full blur-[50px] pointer-events-none"></div>
-                )}
+                </a>
+                <div className="absolute -top-10 -right-10 size-40 bg-primary/10 rounded-full blur-[50px] pointer-events-none"></div>
               </div>
 
               {/* WakaTime Card */}
